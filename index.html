@@ -84,15 +84,6 @@ onValue(ref(db, "players"), (snapshot) => {
 window.addEventListener("beforeunload", ()=>{
   remove(ref(db, "players/" + playerId));
 });
-
-// contoh gerak (biar keliatan berubah)
-setInterval(()=>{
-  player.x += Math.random()*10 - 5;
-  player.y += Math.random()*10 - 5;
-  sendData();
-}, 1000);
-
-</script>
   
 let canvas = document.getElementById("game");
 let ctx = canvas.getContext("2d");
