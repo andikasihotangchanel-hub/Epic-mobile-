@@ -84,9 +84,31 @@ onValue(ref(db, "players"), (snapshot) => {
 window.addEventListener("beforeunload", ()=>{
   remove(ref(db, "players/" + playerId));
 });
+
+ // map size
+const mapWidth = 2000;
+const mapHeight = 2000;
+
+  let bases = [
+  {x:100, y:100, color:"blue"},
+  {x:1800, y:1800, color:"red"}
+];
+
+// fungsi random terrain (halus, bukan kotak)
+function getTerrain(x, y){
+  let n = Math.sin(x * 0.01) + Math.cos(y * 0.01);
+
+  if(n > 1) return "rock";
+  if(n > 0.3) return "grass";
+  if(n > -0.2) return "dirt";
+  if(n > -0.6) return "sand";
+  return "water";
+} 
   
 let canvas = document.getElementById("game");
 let ctx = canvas.getContext("2d");
+
+  let camera = { x: 0, y: 0 };
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -140,15 +162,39 @@ function update(){
     player.x += joystick.dx * player.speed;
     player.y += joystick.dy * player.speed;
   }
+  camera.x = player.x - canvas.width / 2;
+camera.y = player.y - canvas.height / 2;
 }
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
+  // gambar arena random
+for(let x = camera.x; x < camera.x + canvas.width; x += 20){
+  for(let y = camera.y; y < camera.y + canvas.height; y += 20){
+
+    let type = getTerrain(x, y);
+
+    if(type === "grass") ctx.fillStyle = "#2ecc71";
+    else if(type === "dirt") ctx.fillStyle = "#8e5a2b";
+    else if(type === "sand") ctx.fillStyle = "#f1c40f";
+    else if(type === "water") ctx.fillStyle = "#3498db";
+    else if(type === "rock") ctx.fillStyle = "#7f8c8d";
+
+    ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+  }
+}
+
   // player
   ctx.fillStyle = "red";
   ctx.beginPath();
-  ctx.arc(player.x, player.y, player.size, 0, Math.PI*2);
+  ctx.arc(
+  player.x - camera.x,
+  player.y - camera.y,
+  player.size,
+  0,
+  Math.PI*2
+);
   ctx.fill();
 
   for(let id in otherPlayers){
@@ -157,10 +203,25 @@ function draw(){
   if(id !== playerId){
     ctx.fillStyle = "blue";
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 25, 0, Math.PI*2);
+    ctx.arc(
+  p.x - camera.x,
+  p.y - camera.y,
+  25,
+  0,
+  Math.PI*2
+);
     ctx.fill();
   }
 }
+
+  for(let b of bases){
+  ctx.fillStyle = b.color;
+  ctx.fillRect(
+    b.x - camera.x,
+    b.y - camera.y,
+    60, 60
+  );
+  }
 
   // info
   ctx.fillStyle="white";
