@@ -30,8 +30,6 @@ canvas { display:block; }
 
 <canvas id="game"></canvas>
 
-<script>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
@@ -55,11 +53,6 @@ const db = getDatabase(app);
 const playerId = "p" + Math.floor(Math.random()*10000);
 
 // contoh player
-let player = {
-  x: 200,
-  y: 200,
-  hero: "andi"
-};
 
   let otherPlayers = {};
 
@@ -75,8 +68,7 @@ function sendData(){
   window.startGame = function(hero){
   player.hero = hero;
   document.getElementById("menu").style.display="none";
-
-  setInterval(sendData, 100);
+    
   gameLoop();
   }
 
@@ -109,12 +101,6 @@ let player = {
 };
 
 let joystick = {active:false, dx:0, dy:0};
-
-function startGame(hero){
-  player.hero = hero;
-  document.getElementById("menu").style.display="none";
-  gameLoop();
-}
 
 // joystick
 canvas.addEventListener("touchstart", e=>{
@@ -158,16 +144,6 @@ function update(){
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  const playerId = "p" + Math.random();
-
-function sendData(){
-  set(ref(db, "players/" + playerId), {
-    x: player.x,
-    y: player.y,
-    hero: player.hero
-  });
-}
 
   // player
   ctx.fillStyle = "red";
