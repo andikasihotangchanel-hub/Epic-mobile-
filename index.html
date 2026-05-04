@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Epick Mobile</title>
+<style>
+body { margin:0; overflow:hidden; background:#111; color:white; font-family:sans-serif;}
+#menu {
+  position:absolute; width:100%; height:100%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  background:#000;
+}
+button {
+  padding:10px; margin:5px;
+  background:#444; color:white; border:none;
+}
+canvas { display:block; }
+</style>
+</head>
+<body>
+
+<div id="menu">
+  <h1>Pilih Hero</h1>
+  <button onclick="startGame('andi')">Andi_Pro</button>
+  <button onclick="startGame('orbu')">Orbu</button>
+  <button onclick="startGame('tor')">Torbandolok</button>
+  <button onclick="startGame('sir')">Sirandos</button>
+</div>
+
+<canvas id="game"></canvas>
+
+<script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+// config kamu (sudah benar)
+const firebaseConfig = {
+  apiKey: "AIzaSyDfluh_N9DWM6EpLolpa_CYuCKBrAdulvk",
+  authDomain: "epick-mobile.firebaseapp.com",
+  projectId: "epick-mobile",
+  storageBucket: "epick-mobile.firebasestorage.app",
+  messagingSenderId: "85157678826",
+  appId: "1:85157678826:web:896779324f5638eb609193",
+  measurementId: "G-J065HDMLBF"
+};
+
+// init
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ID unik player
+const playerId = "p" + Math.floor(Math.random()*10000);
+
+// contoh player
+let player = {
+  x: 200,
+  y: 200,
+  hero: "andi"
+};
+
+// 🔥 KIRIM DATA KE FIREBASE
+function sendData(){
+  set(ref(db, "players/" + playerId), player);
+}
+
+// 🔥 AMBIL DATA PLAYER LAIN
+onValue(ref(db, "players"), (snapshot) => {
+  const data = snapshot.val();
+  console.log("SEMUA PLAYER:", data);
+});
+
+// 🔥 HAPUS SAAT KELUAR
+window.addEventListener("beforeunload", ()=>{
+  remove(ref(db, "players/" + playerId));
+});
+
+// contoh gerak (biar keliatan berubah)
+setInterval(()=>{
+  player.x += Math.random()*10 - 5;
+  player.y += Math.random()*10 - 5;
+  sendData();
+}, 1000);
+
+</script>
+  
+let canvas = document.getElementById("game");
+let ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let player = {
+  x:200,
+  y:200,
+  size:30,
+  speed:3,
+  hero:"",
+  hp:100
+};
+
+let joystick = {active:false, dx:0, dy:0};
+
+function startGame(hero){
+  player.hero = hero;
+  document.getElementById("menu").style.display="none";
+  gameLoop();
+}
+
+// joystick
+canvas.addEventListener("touchstart", e=>{
+  joystick.active = true;
+});
+canvas.addEventListener("touchmove", e=>{
+  let touch = e.touches[0];
+  joystick.dx = (touch.clientX - player.x)/50;
+  joystick.dy = (touch.clientY - player.y)/50;
+});
+canvas.addEventListener("touchend", ()=>{
+  joystick.active = false;
+  joystick.dx=0; joystick.dy=0;
+});
+
+// skill
+function useSkill(){
+  if(player.hero==="andi"){
+    player.hp += 5; // serap hp
+  }
+  if(player.hero==="orbu"){
+    player.speed = 6; // jadi mobil
+    setTimeout(()=>player.speed=3,2000);
+  }
+  if(player.hero==="tor"){
+    alert("Ular keluar! (demo)");
+  }
+  if(player.hero==="sir"){
+    alert("Magnet aktif! (demo)");
+  }
+}
+
+window.addEventListener("click", useSkill);
+
+function update(){
+  if(joystick.active){
+    player.x += joystick.dx * player.speed;
+    player.y += joystick.dy * player.speed;
+  }
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // player
+  ctx.fillStyle = "red";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.size, 0, Math.PI*2);
+  ctx.fill();
+
+  // info
+  ctx.fillStyle="white";
+  ctx.fillText("Hero: "+player.hero,10,20);
+  ctx.fillText("HP: "+player.hp,10,40);
+}
+
+function gameLoop(){
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+</script>
+
+</body>
+</html>
