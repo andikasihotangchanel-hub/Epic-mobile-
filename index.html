@@ -122,21 +122,43 @@ let player = {
   hp:100
 };
 
-let joystick = {active:false, dx:0, dy:0};
+let joystick = {
+  active: false,
+  startX: 0,
+  startY: 0,
+  dx: 0,
+  dy: 0
+};
 
 // joystick
 canvas.addEventListener("touchstart", e=>{
+  let t = e.touches[0];
   joystick.active = true;
+  joystick.startX = t.clientX;
+  joystick.startY = t.clientY;
 });
+
 canvas.addEventListener("touchmove", e=>{
-  let touch = e.touches[0];
-  joystick.dx = (touch.clientX - player.x)/50;
-  joystick.dy = (touch.clientY - player.y)/50;
+  if(!joystick.active) return;
+
+  let t = e.touches[0];
+
+  joystick.dx = (t.clientX - joystick.startX) / 40;
+  joystick.dy = (t.clientY - joystick.startY) / 40;
 });
+
 canvas.addEventListener("touchend", ()=>{
   joystick.active = false;
-  joystick.dx=0; joystick.dy=0;
+  joystick.dx = 0;
+  joystick.dy = 0;
 });
+
+  function update(){
+  if(joystick.active){
+    player.x += joystick.dx * player.speed;
+    player.y += joystick.dy * player.speed;
+  }
+  }
 
 // skill
 function useSkill(){
@@ -170,10 +192,39 @@ function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   // gambar arena random
-for(let x = camera.x; x < camera.x + canvas.width; x += 20){
-  for(let y = camera.y; y < camera.y + canvas.height; y += 20){
+if(type === "grass"){
+  ctx.fillStyle = "#2ecc71";
+  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
 
-    let type = getTerrain(x, y);
+  // detail rumput
+  ctx.fillStyle = "#27ae60";
+  ctx.fillRect(x - camera.x + 5, y - camera.y + 5, 5, 5);
+}
+
+else if(type === "water"){
+  ctx.fillStyle = "#3498db";
+  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+
+  ctx.fillStyle = "#5dade2";
+  ctx.fillRect(x - camera.x + 3, y - camera.y + 3, 10, 5);
+}
+
+else if(type === "rock"){
+  ctx.fillStyle = "#7f8c8d";
+  ctx.beginPath();
+  ctx.arc(x - camera.x + 10, y - camera.y + 10, 8, 0, Math.PI*2);
+  ctx.fill();
+}
+
+  else if(type === "dirt"){
+  ctx.fillStyle = "#8e5a2b";
+  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+}
+
+else if(type === "sand"){
+  ctx.fillStyle = "#f1c40f";
+  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+}
 
     if(type === "grass") ctx.fillStyle = "#2ecc71";
     else if(type === "dirt") ctx.fillStyle = "#8e5a2b";
