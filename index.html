@@ -72,6 +72,14 @@ function sendData(){
   set(ref(db, "players/" + playerId), player);
 }
 
+  window.startGame = function(hero){
+  player.hero = hero;
+  document.getElementById("menu").style.display="none";
+
+  setInterval(sendData, 100);
+  gameLoop();
+  }
+
   setInterval(sendData, 100);
 
 // 🔥 AMBIL DATA PLAYER LAIN
