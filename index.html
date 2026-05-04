@@ -61,10 +61,18 @@ let player = {
   hero: "andi"
 };
 
+  let otherPlayers = {};
+
+onValue(ref(db, "players"), (snapshot) => {
+  otherPlayers = snapshot.val() || {};
+});
+
 // 🔥 KIRIM DATA KE FIREBASE
 function sendData(){
   set(ref(db, "players/" + playerId), player);
 }
+
+  setInterval(sendData, 100);
 
 // 🔥 AMBIL DATA PLAYER LAIN
 onValue(ref(db, "players"), (snapshot) => {
@@ -152,11 +160,32 @@ function update(){
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
+  const playerId = "p" + Math.random();
+
+function sendData(){
+  set(ref(db, "players/" + playerId), {
+    x: player.x,
+    y: player.y,
+    hero: player.hero
+  });
+}
+
   // player
   ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(player.x, player.y, player.size, 0, Math.PI*2);
   ctx.fill();
+
+  for(let id in otherPlayers){
+  let p = otherPlayers[id];
+
+  if(id !== playerId){
+    ctx.fillStyle = "blue";
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 25, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
 
   // info
   ctx.fillStyle="white";
