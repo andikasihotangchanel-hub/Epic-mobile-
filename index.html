@@ -112,7 +112,7 @@ let ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
+  
 let player = {
   x:200,
   y:200,
@@ -121,6 +121,22 @@ let player = {
   hero:"",
   hp:100
 };
+
+  let enemies = []; // musuh dummy
+let projectiles = [];
+let waves = [];
+let ultimateUsed = false;
+
+  function spawnEnemies(){
+  for(let i=0;i<5;i++){
+    enemies.push({
+      x: Math.random()*2000,
+      y: Math.random()*2000,
+      hp:100
+    });
+  }
+}
+spawnEnemies();
 
 let joystick = {
   active: false,
