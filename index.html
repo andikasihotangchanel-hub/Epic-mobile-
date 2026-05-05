@@ -68,11 +68,11 @@ function sendData(){
   window.startGame = function(hero){
   player.hero = hero;
   document.getElementById("menu").style.display="none";
+
+    setInterval(sendData, 100); 
     
   gameLoop();
   }
-
-  setInterval(sendData, 100);
 
 // 🔥 AMBIL DATA PLAYER LAIN
 onValue(ref(db, "players"), (snapshot) => {
@@ -152,12 +152,10 @@ canvas.addEventListener("touchend", ()=>{
   joystick.dx = 0;
   joystick.dy = 0;
 });
-
-  function update(){
+  
   if(joystick.active){
     player.x += joystick.dx * player.speed;
     player.y += joystick.dy * player.speed;
-  }
   }
 
 // skill
@@ -233,8 +231,7 @@ else if(type === "sand"){
     else if(type === "rock") ctx.fillStyle = "#7f8c8d";
 
     ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-  }
-}
+  
 
   // player
   ctx.fillStyle = "red";
@@ -264,7 +261,8 @@ else if(type === "sand"){
     ctx.fill();
   }
 }
-
+  }
+  
   for(let b of bases){
   ctx.fillStyle = b.color;
   ctx.fillRect(
