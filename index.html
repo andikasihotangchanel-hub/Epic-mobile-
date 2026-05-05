@@ -185,8 +185,11 @@ function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   // 🔥 MAP (WAJIB ADA LOOP)
+  
+  for(let x = camera.x; x < camera.x + canvas.width; x += 20){
+  for(let y = camera.y; y < camera.y + canvas.height; y += 20){
 
-      let type = getTerrain(x, y);
+    let type = getTerrain(x, y);
 
 // 🌿 RUMPUT
 if(type === "grass"){
