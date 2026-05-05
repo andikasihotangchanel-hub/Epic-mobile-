@@ -193,23 +193,11 @@ function draw(){
   for(let x = camera.x; x < camera.x + canvas.width; x += 20){
     for(let y = camera.y; y < camera.y + canvas.height; y += 20){
 
-      let type = getTerrain(x, y);
-
-      if(type === "grass"){
-        ctx.fillStyle = "#2ecc71";
-      }
-      else if(type === "water"){
-        ctx.fillStyle = "#3498db";
-      }
-      else if(type === "rock"){
-        ctx.fillStyle = "#7f8c8d";
-      }
-      else if(type === "dirt"){
-        ctx.fillStyle = "#8e5a2b";
-      }
-      else if(type === "sand"){
-        ctx.fillStyle = "#f1c40f";
-      }
+      if(type === "grass") ctx.fillStyle = "#3a7d44";     // hijau lebih adem
+else if(type === "dirt") ctx.fillStyle = "#7a5230"; // coklat natural
+else if(type === "sand") ctx.fillStyle = "#d9c27a"; // kuning soft
+else if(type === "water") ctx.fillStyle = "#2c6fa3"; // biru gak nyilauin
+else ctx.fillStyle = "#6e6e6e"; // batu
 
       ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
     }
