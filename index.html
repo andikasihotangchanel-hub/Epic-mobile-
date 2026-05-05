@@ -122,6 +122,18 @@ let player = {
   hp:100
 };
 
+  function skill1(){ console.log("Skill 1"); }
+function skill2(){ console.log("Skill 2"); }
+function skill3(){ console.log("Skill 3"); }
+function skill4(){ console.log("Skill 4"); }
+
+  window.addEventListener("keydown", e=>{
+  if(e.key === "1") skill1();
+  if(e.key === "2") skill2();
+  if(e.key === "3") skill3();
+  if(e.key === "4") skill4();
+});
+
   let waves = [];
 let projectiles = [];
 
@@ -296,14 +308,7 @@ else if(type === "rock"){
   ctx.fillText("Hero: "+player.hero,10,20);
   ctx.fillText("HP: "+player.hp,10,40);
 }
-
-  window.addEventListener("keydown", e=>{
-  if(e.key === "1") skill1();
-  if(e.key === "2") skill2();
-  if(e.key === "3") skill3();
-  if(e.key === "4") skill4();
-});
-
+ 
 function gameLoop(){
   update();
   draw();
