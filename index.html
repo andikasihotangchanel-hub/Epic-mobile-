@@ -189,90 +189,73 @@ camera.y = player.y - canvas.height / 2;
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // gambar arena random
-if(type === "grass"){
-  ctx.fillStyle = "#2ecc71";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+  // 🔥 MAP (WAJIB ADA LOOP)
+  for(let x = camera.x; x < camera.x + canvas.width; x += 20){
+    for(let y = camera.y; y < camera.y + canvas.height; y += 20){
 
-  // detail rumput
-  ctx.fillStyle = "#27ae60";
-  ctx.fillRect(x - camera.x + 5, y - camera.y + 5, 5, 5);
-}
+      let type = getTerrain(x, y);
 
-else if(type === "water"){
-  ctx.fillStyle = "#3498db";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+      if(type === "grass"){
+        ctx.fillStyle = "#2ecc71";
+      }
+      else if(type === "water"){
+        ctx.fillStyle = "#3498db";
+      }
+      else if(type === "rock"){
+        ctx.fillStyle = "#7f8c8d";
+      }
+      else if(type === "dirt"){
+        ctx.fillStyle = "#8e5a2b";
+      }
+      else if(type === "sand"){
+        ctx.fillStyle = "#f1c40f";
+      }
 
-  ctx.fillStyle = "#5dade2";
-  ctx.fillRect(x - camera.x + 3, y - camera.y + 3, 10, 5);
-}
+      ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+    }
+  }
 
-else if(type === "rock"){
-  ctx.fillStyle = "#7f8c8d";
-  ctx.beginPath();
-  ctx.arc(x - camera.x + 10, y - camera.y + 10, 8, 0, Math.PI*2);
-  ctx.fill();
-}
-
-  else if(type === "dirt"){
-  ctx.fillStyle = "#8e5a2b";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-}
-
-else if(type === "sand"){
-  ctx.fillStyle = "#f1c40f";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-}
-
-    if(type === "grass") ctx.fillStyle = "#2ecc71";
-    else if(type === "dirt") ctx.fillStyle = "#8e5a2b";
-    else if(type === "sand") ctx.fillStyle = "#f1c40f";
-    else if(type === "water") ctx.fillStyle = "#3498db";
-    else if(type === "rock") ctx.fillStyle = "#7f8c8d";
-
-    ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-  
-
-  // player
+  // 🔴 PLAYER
   ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(
-  player.x - camera.x,
-  player.y - camera.y,
-  player.size,
-  0,
-  Math.PI*2
-);
+    player.x - camera.x,
+    player.y - camera.y,
+    player.size,
+    0,
+    Math.PI*2
+  );
   ctx.fill();
 
+  // 🔵 PLAYER LAIN
   for(let id in otherPlayers){
-  let p = otherPlayers[id];
+    let p = otherPlayers[id];
 
-  if(id !== playerId){
-    ctx.fillStyle = "blue";
-    ctx.beginPath();
-    ctx.arc(
-  p.x - camera.x,
-  p.y - camera.y,
-  25,
-  0,
-  Math.PI*2
-);
-    ctx.fill();
+    if(id !== playerId){
+      ctx.fillStyle = "blue";
+      ctx.beginPath();
+      ctx.arc(
+        p.x - camera.x,
+        p.y - camera.y,
+        25,
+        0,
+        Math.PI*2
+      );
+      ctx.fill();
+    }
   }
-}
-  }
-  
+
+  // 🏰 BASE
   for(let b of bases){
-  ctx.fillStyle = b.color;
-  ctx.fillRect(
-    b.x - camera.x,
-    b.y - camera.y,
-    60, 60
-  );
+    ctx.fillStyle = b.color;
+    ctx.fillRect(
+      b.x - camera.x,
+      b.y - camera.y,
+      60, 60
+    );
   }
 
-  // info
+  // UI
   ctx.fillStyle="white";
   ctx.fillText("Hero: "+player.hero,10,20);
   ctx.fillText("HP: "+player.hp,10,40);
