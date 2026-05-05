@@ -122,22 +122,6 @@ let player = {
   hp:100
 };
 
-  let enemies = []; // musuh dummy
-let projectiles = [];
-let waves = [];
-let ultimateUsed = false;
-
-  function spawnEnemies(){
-  for(let i=0;i<5;i++){
-    enemies.push({
-      x: Math.random()*2000,
-      y: Math.random()*2000,
-      hp:100
-    });
-  }
-}
-spawnEnemies();
-
 let joystick = {
   active: false,
   startX: 0,
@@ -247,6 +231,20 @@ function draw(){
     }
   }
 
+  waves.forEach(w=>{
+  ctx.fillStyle = "cyan";
+  ctx.beginPath();
+  ctx.arc(w.x - camera.x, w.y - camera.y, 30, 0, Math.PI*2);
+  ctx.fill();
+});
+
+  projectiles.forEach(p=>{
+  ctx.fillStyle = "orange";
+  ctx.beginPath();
+  ctx.arc(p.x - camera.x, p.y - camera.y, 10, 0, Math.PI*2);
+  ctx.fill();
+});
+
   // 🏰 BASE
   for(let b of bases){
     ctx.fillStyle = b.color;
@@ -262,6 +260,13 @@ function draw(){
   ctx.fillText("Hero: "+player.hero,10,20);
   ctx.fillText("HP: "+player.hp,10,40);
 }
+
+  window.addEventListener("keydown", e=>{
+  if(e.key === "1") skill1();
+  if(e.key === "2") skill2();
+  if(e.key === "3") skill3();
+  if(e.key === "4") skill4();
+});
 
 function gameLoop(){
   update();
