@@ -122,6 +122,9 @@ let player = {
   hp:100
 };
 
+  let waves = [];
+let projectiles = [];
+
 let joystick = {
   active: false,
   startX: 0,
@@ -195,46 +198,42 @@ function draw(){
 if(type === "grass"){
   ctx.fillStyle = "#3a7d44";
   ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-
-  // detail rumput
-  ctx.fillStyle = "#2e5f34";
-  ctx.fillRect(x - camera.x + 5, y - camera.y + 5, 3, 3);
-  ctx.fillRect(x - camera.x + 12, y - camera.y + 10, 2, 2);
 }
 
 // 🟫 TANAH
 else if(type === "dirt"){
   ctx.fillStyle = "#7a5230";
   ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-
-  ctx.fillStyle = "#5c3d22";
-  ctx.fillRect(x - camera.x + 6, y - camera.y + 6, 4, 2);
 }
 
 // 🟨 PASIR
 else if(type === "sand"){
   ctx.fillStyle = "#d9c27a";
   ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-
-  ctx.fillStyle = "#c2ad65";
-  ctx.fillRect(x - camera.x + 8, y - camera.y + 8, 2, 2);
 }
 
 // 🌊 AIR
 else if(type === "water"){
   ctx.fillStyle = "#2c6fa3";
   ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-
-  // efek gelombang
-  ctx.fillStyle = "#3f8ec4";
-  ctx.fillRect(x - camera.x + 4, y - camera.y + 4, 10, 3);
 }
 
-// 🪨 BATU
+// 🪨 BATU (INI YANG KAMU MAKSUD)
 else if(type === "rock"){
+  // dasar
   ctx.fillStyle = "#6e6e6e";
+  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+
+  // bentuk batu biar gak kotak
+  ctx.fillStyle = "#555";
   ctx.beginPath();
-  ctx.arc(x - camera.x + 10, y - camera.y + 10, 6, 0, Math.PI*2);
+  ctx.arc(
+    x - camera.x + 10,
+    y - camera.y + 10,
+    6,
+    0,
+    Math.PI*2
+  );
   ctx.fill();
 }
 
