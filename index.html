@@ -198,6 +198,11 @@ canvas.height = window.innerHeight;
   let heroImg = new Image();
 
   generateMap();
+
+window.onerror = function(msg, url, line){
+  console.log("ERROR:", msg, "di baris:", line);
+};
+  
   
 let player = {
   x:200,
