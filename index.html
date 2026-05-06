@@ -283,50 +283,56 @@ function useSkill(){
 window.addEventListener("click", useSkill);
 
 function update(){
+  // gerak
   if(joystick.active){
     player.x += joystick.dx * player.speed;
     player.y += joystick.dy * player.speed;
   }
 
-  let inBush = false;
+  // batas map
+  if(player.x < 0) player.x = 0;
+  if(player.y < 0) player.y = 0;
+  if(player.x > mapWidth) player.x = mapWidth;
+  if(player.y > mapHeight) player.y = mapHeight;
 
-for(let b of bushes){
-  let dx = player.x - b.x;
-  let dy = player.y - b.y;
-  let dist = Math.sqrt(dx*dx + dy*dy);
+  // 🪨 collision batu
+  for(let o of obstacles){
+    let dx = player.x - o.x;
+    let dy = player.y - o.y;
+    let dist = Math.sqrt(dx*dx + dy*dy);
 
-  if(dist < b.size){
-    inBush = true;
+    let minDist = o.size + player.size;
+
+    if(dist < minDist){
+      let angle = Math.atan2(dy, dx);
+      player.x = o.x + Math.cos(angle) * minDist;
+      player.y = o.y + Math.sin(angle) * minDist;
+    }
   }
-}
 
-// kalau di semak → transparan
-if(inBush){
-  ctx.globalAlpha = 0.3;
-}
+  // 🌊 river speed
+  let inRiver = false;
+  for(let r of rivers){
+    let dx = player.x - r.x;
+    let dy = player.y - r.y;
+    let dist = Math.sqrt(dx*dx + dy*dy);
 
-// batas map
-if(player.x < 0) player.x = 0;
-if(player.y < 0) player.y = 0;
-if(player.x > mapWidth) player.x = mapWidth;
-if(player.y > mapHeight) player.y = mapHeight;
-
-for(let o of obstacles){
-  let dx = player.x - o.x;
-  let dy = player.y - o.y;
-  let dist = Math.sqrt(dx*dx + dy*dy);
-
-  let minDist = o.size + player.size;
-
-  if(dist < minDist){
-    let angle = Math.atan2(dy, dx);
-
-    player.x = o.x + Math.cos(angle) * minDist;
-    player.y = o.y + Math.sin(angle) * minDist;
+    if(dist < r.size){
+      inRiver = true;
+    }
   }
-}
-}
 
+  if(inRiver){
+    player.speed = 5;
+  } else {
+    player.speed = 3;
+  }
+
+  // kamera
+  camera.x = player.x - canvas.width / 2;
+  camera.y = player.y - canvas.height / 2;
+}
+    
   let inRiver = false;
 
 for(let r of rivers){
@@ -386,6 +392,24 @@ function draw(){
   ctx.fillRect(mapWidth - camera.x, -camera.y, 20, mapHeight);
   ctx.fillRect(-camera.x, -camera.y, mapWidth, 20);
   ctx.fillRect(-camera.x, mapHeight - camera.y, mapWidth, 20);
+
+  // 🌿 cek apakah player di semak
+let inBush = false;
+
+for(let b of bushes){
+  let dx = player.x - b.x;
+  let dy = player.y - b.y;
+  let dist = Math.sqrt(dx*dx + dy*dy);
+
+  if(dist < b.size){
+    inBush = true;
+  }
+}
+
+// kalau di semak → transparan
+if(inBush){
+  ctx.globalAlpha = 0.3;
+}
 
   // 🔴 PLAYER
   if(heroImg.complete){
