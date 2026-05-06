@@ -30,6 +30,13 @@ canvas { display:block; }
 
 <canvas id="game"></canvas>
 
+  <div id="ui">
+  <button onclick="skill1()">1</button>
+  <button onclick="skill2()">2</button>
+  <button onclick="skill3()">3</button>
+  <button onclick="skill4()">4</button>
+  </div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
