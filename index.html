@@ -217,6 +217,7 @@ let joystick = {
 
 // joystick
 canvas.addEventListener("touchstart", e=>{
+  e.preventDefault();
   let t = e.touches[0];
   joystick.active = true;
   joystick.startX = t.clientX;
@@ -224,10 +225,10 @@ canvas.addEventListener("touchstart", e=>{
 });
 
 canvas.addEventListener("touchmove", e=>{
+  e.preventDefault();
   if(!joystick.active) return;
 
   let t = e.touches[0];
-
   joystick.dx = (t.clientX - joystick.startX) / 40;
   joystick.dy = (t.clientY - joystick.startY) / 40;
 });
@@ -323,114 +324,74 @@ camera.y = player.y - canvas.height / 2;
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // 🔥 MAP (WAJIB ADA LOOP)
-  
-  for(let x = camera.x; x < camera.x + canvas.width; x += 20){
-  for(let y = camera.y; y < camera.y + canvas.height; y += 20){
+  // 🌍 TANAH (background)
+  ctx.fillStyle = "#6b8e23";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    let type = getTerrain(x, y);
+  // 🌊 SUNGAI
+  for(let r of rivers){
+    ctx.fillStyle = "#2c6fa3";
+    ctx.beginPath();
+    ctx.arc(r.x - camera.x, r.y - camera.y, r.size, 0, Math.PI*2);
+    ctx.fill();
+  }
 
-    // 🌿 RUMPUT
-for(let b of bushes){
-  ctx.fillStyle = "green";
-  ctx.beginPath();
-  ctx.arc(b.x - camera.x, b.y - camera.y, b.size, 0, Math.PI*2);
-  ctx.fill();
-}
+  // 🌿 SEMAK
+  for(let b of bushes){
+    ctx.fillStyle = "#1e4d2b";
+    ctx.beginPath();
+    ctx.arc(b.x - camera.x, b.y - camera.y, b.size, 0, Math.PI*2);
+    ctx.fill();
+  }
 
-// 🌍 TANAH DASAR (background)
-ctx.fillStyle = "#6b8e23"; // hijau tanah (lebih adem)
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // 🪨 BATU
+  for(let o of obstacles){
+    ctx.fillStyle = "#777";
+    ctx.beginPath();
+    ctx.arc(o.x - camera.x, o.y - camera.y, o.size, 0, Math.PI*2);
+    ctx.fill();
+  }
 
-// 🌊 AIR
-for(let r of rivers){
-  ctx.fillStyle = "#2c6fa3";
-  ctx.fillRect(
-    r.x - camera.x,
-    r.y - camera.y,
-    20,
-    20
-  );
-}
+  // 🧱 BATAS MAP
+  ctx.fillStyle = "#555";
+  ctx.fillRect(-camera.x, -camera.y, 20, mapHeight);
+  ctx.fillRect(mapWidth - camera.x, -camera.y, 20, mapHeight);
+  ctx.fillRect(-camera.x, -camera.y, mapWidth, 20);
+  ctx.fillRect(-camera.x, mapHeight - camera.y, mapWidth, 20);
 
-// 🪨 BATU
-for(let o of obstacles){
-  ctx.fillStyle = "#777";
-  ctx.beginPath();
-  ctx.arc(o.x - camera.x, o.y - camera.y, o.size, 0, Math.PI*2);
-  ctx.fill();
-}
-
-    ctx.fillStyle = "#555";
-
-// kiri
-ctx.fillRect(-camera.x, -camera.y, 20, mapHeight);
-
-// kanan
-ctx.fillRect(mapWidth - camera.x, -camera.y, 20, mapHeight);
-
-// atas
-ctx.fillRect(-camera.x, -camera.y, mapWidth, 20);
-
-// bawah
-ctx.fillRect(-camera.x, mapHeight - camera.y, mapWidth, 20);
-
-    // kalau di semak → transparan
-if(inBush){
-  ctx.globalAlpha = 0.3;
-}
-    
   // 🔴 PLAYER
-  ctx.drawImage(
-    heroImg,
-    player.x - camera.x - 25,
-    player.y - camera.y - 25,
-    50,
-    50
-  );
+  if(heroImg.complete){
+    ctx.drawImage(
+      heroImg,
+      player.x - camera.x - 25,
+      player.y - camera.y - 25,
+      50,
+      50
+    );
+  } else {
+    // fallback kalau gambar belum load
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.arc(player.x - camera.x, player.y - camera.y, 20, 0, Math.PI*2);
+    ctx.fill();
+  }
 
-ctx.globalAlpha = 1;
-    
   // 🔵 PLAYER LAIN
   for(let id in otherPlayers){
-  let p = otherPlayers[id];
-
-// 🔥 cek semak player lain
-    if(isInBush(p.x, p.y)){
-      ctx.globalAlpha = 0.3;
+    let p = otherPlayers[id];
+    if(id !== playerId){
+      let img = heroImages[id];
+      if(img && img.complete){
+        ctx.drawImage(
+          img,
+          p.x - camera.x - 25,
+          p.y - camera.y - 25,
+          50,
+          50
+        );
+      }
     }
-    
-  if(id !== playerId){
-    let img = heroImages[id];
-
-    if(img && img.complete){
-      ctx.drawImage(
-        img,
-        p.x - camera.x - 30,
-        p.y - camera.y - 30,
-        60,
-        60
-      );
-    }
-
-ctx.globalAlpha = 1;
-    
   }
-  }
-
-  waves.forEach(w=>{
-  ctx.fillStyle = "cyan";
-  ctx.beginPath();
-  ctx.arc(w.x - camera.x, w.y - camera.y, 30, 0, Math.PI*2);
-  ctx.fill();
-});
-
-  projectiles.forEach(p=>{
-  ctx.fillStyle = "orange";
-  ctx.beginPath();
-  ctx.arc(p.x - camera.x, p.y - camera.y, 10, 0, Math.PI*2);
-  ctx.fill();
-});
 
   // 🏰 BASE
   for(let b of bases){
@@ -446,8 +407,6 @@ ctx.globalAlpha = 1;
   ctx.fillStyle="white";
   ctx.fillText("Hero: "+player.hero,10,20);
   ctx.fillText("HP: "+player.hp,10,40);
-}
-  }
 }
  
 function gameLoop(){
