@@ -12,6 +12,13 @@ body { margin:0; overflow:hidden; background:#111; color:white; font-family:sans
   background:#000;
 }
 
+  #ui {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  }
+
 #ui {
   position: absolute;
   bottom: 20px;
@@ -331,28 +338,6 @@ function update(){
   // kamera
   camera.x = player.x - canvas.width / 2;
   camera.y = player.y - canvas.height / 2;
-}
-    
-  let inRiver = false;
-
-for(let r of rivers){
-  let dx = player.x - r.x;
-  let dy = player.y - r.y;
-  let dist = Math.sqrt(dx*dx + dy*dy);
-
-  if(dist < r.size){
-    inRiver = true;
-  }
-}
-
-if(inRiver){
-  player.speed = 5;
-}else{
-  player.speed = 3;
-}
-  
-  camera.x = player.x - canvas.width / 2;
-camera.y = player.y - canvas.height / 2;
 }
 
 function draw(){
