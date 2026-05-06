@@ -11,6 +11,23 @@ body { margin:0; overflow:hidden; background:#111; color:white; font-family:sans
   align-items:center; justify-content:center;
   background:#000;
 }
+
+#ui {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+#ui button {
+  width: 60px;
+  height: 60px;
+  margin: 5px;
+  font-size: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+}
+  
 button {
   padding:10px; margin:5px;
   background:#444; color:white; border:none;
@@ -299,11 +316,15 @@ for(let o of obstacles){
   let dy = player.y - o.y;
   let dist = Math.sqrt(dx*dx + dy*dy);
 
-  if(dist < o.size){
-    // dorong player keluar
-    player.x += dx * 0.1;
-    player.y += dy * 0.1;
+  let minDist = o.size + player.size;
+
+  if(dist < minDist){
+    let angle = Math.atan2(dy, dx);
+
+    player.x = o.x + Math.cos(angle) * minDist;
+    player.y = o.y + Math.sin(angle) * minDist;
   }
+}
 }
 
   let inRiver = false;
@@ -414,6 +435,32 @@ function draw(){
   ctx.fillStyle="white";
   ctx.fillText("Hero: "+player.hero,10,20);
   ctx.fillText("HP: "+player.hp,10,40);
+
+// 🎮 JOYSTICK VISUAL
+if(joystick.active){
+  ctx.globalAlpha = 0.5;
+
+  // lingkar luar
+  ctx.beginPath();
+  ctx.arc(joystick.startX, joystick.startY, 40, 0, Math.PI*2);
+  ctx.fillStyle = "white";
+  ctx.fill();
+
+  // stick
+  ctx.beginPath();
+  ctx.arc(
+    joystick.startX + joystick.dx * 20,
+    joystick.startY + joystick.dy * 20,
+    20,
+    0,
+    Math.PI*2
+  );
+  ctx.fillStyle = "gray";
+  ctx.fill();
+
+  ctx.globalAlpha = 1;
+}
+  
 }
  
 function gameLoop(){
