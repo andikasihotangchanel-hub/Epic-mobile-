@@ -109,6 +109,10 @@ window.addEventListener("beforeunload", ()=>{
 const mapWidth = 2000;
 const mapHeight = 2000;
 
+let obstacles = []; // batu (nabrak)
+let bushes = [];    // semak (sembunyi)
+let rivers = [];    // sungai (speed)
+  
   let bases = [
   {x:100, y:100, color:"blue"},
   {x:1800, y:1800, color:"red"}
@@ -123,7 +127,36 @@ function getTerrain(x, y){
   if(n > -0.2) return "dirt";
   if(n > -0.6) return "sand";
   return "water";
-} 
+}
+
+  function generateMap(){
+  // batu random
+  for(let i=0;i<50;i++){
+    obstacles.push({
+      x: Math.random()*mapWidth,
+      y: Math.random()*mapHeight,
+      size: 40
+    });
+  }
+
+  // semak random
+  for(let i=0;i<40;i++){
+    bushes.push({
+      x: Math.random()*mapWidth,
+      y: Math.random()*mapHeight,
+      size: 35
+    });
+  }
+
+  // sungai (garis horizontal)
+  for(let i=0;i<200;i++){
+    rivers.push({
+      x: i*20,
+      y: 900,
+      size: 20
+    });
+  }
+  }
   
 let canvas = document.getElementById("game");
 let ctx = canvas.getContext("2d");
@@ -134,6 +167,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
   let heroImg = new Image();
+
+  generateMap();
   
 let player = {
   x:200,
@@ -155,6 +190,19 @@ function skill4(){ console.log("Skill 4"); }
   if(e.key === "3") skill3();
   if(e.key === "4") skill4();
 });
+
+  function isInBush(px, py){
+  for(let b of bushes){
+    let dx = px - b.x;
+    let dy = py - b.y;
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < b.size){
+      return true;
+    }
+  }
+  return false;
+  }
 
   let waves = [];
 let projectiles = [];
@@ -214,6 +262,60 @@ function update(){
     player.x += joystick.dx * player.speed;
     player.y += joystick.dy * player.speed;
   }
+
+  let inBush = false;
+
+for(let b of bushes){
+  let dx = player.x - b.x;
+  let dy = player.y - b.y;
+  let dist = Math.sqrt(dx*dx + dy*dy);
+
+  if(dist < b.size){
+    inBush = true;
+  }
+}
+
+// kalau di semak → transparan
+if(inBush){
+  ctx.globalAlpha = 0.3;
+}
+
+// batas map
+if(player.x < 0) player.x = 0;
+if(player.y < 0) player.y = 0;
+if(player.x > mapWidth) player.x = mapWidth;
+if(player.y > mapHeight) player.y = mapHeight;
+
+for(let o of obstacles){
+  let dx = player.x - o.x;
+  let dy = player.y - o.y;
+  let dist = Math.sqrt(dx*dx + dy*dy);
+
+  if(dist < o.size){
+    // dorong player keluar
+    player.x += dx * 0.1;
+    player.y += dy * 0.1;
+  }
+}
+
+  let inRiver = false;
+
+for(let r of rivers){
+  let dx = player.x - r.x;
+  let dy = player.y - r.y;
+  let dist = Math.sqrt(dx*dx + dy*dy);
+
+  if(dist < r.size){
+    inRiver = true;
+  }
+}
+
+if(inRiver){
+  player.speed = 5;
+}else{
+  player.speed = 3;
+}
+  
   camera.x = player.x - canvas.width / 2;
 camera.y = player.y - canvas.height / 2;
 }
@@ -229,43 +331,53 @@ function draw(){
     let type = getTerrain(x, y);
 
     // 🌿 RUMPUT
-if(type === "grass"){
-  ctx.fillStyle = "#3a7d44";
+for(let b of bushes){
+  ctx.fillStyle = "green";
   ctx.beginPath();
-  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
+  ctx.arc(b.x - camera.x, b.y - camera.y, b.size, 0, Math.PI*2);
   ctx.fill();
 }
 
-// 🟫 TANAH
-else if(type === "dirt"){
-  ctx.fillStyle = "#7a5230";
-  ctx.beginPath();
-  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
-  ctx.fill();
-}
-
-// 🟨 PASIR
-else if(type === "sand"){
-  ctx.fillStyle = "#d9c27a";
-  ctx.beginPath();
-  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
-  ctx.fill();
-}
+// 🌍 TANAH DASAR (background)
+ctx.fillStyle = "#6b8e23"; // hijau tanah (lebih adem)
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 // 🌊 AIR
-else if(type === "water"){
+for(let r of rivers){
   ctx.fillStyle = "#2c6fa3";
-  ctx.beginPath();
-  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
-  ctx.fill();
+  ctx.fillRect(
+    r.x - camera.x,
+    r.y - camera.y,
+    20,
+    20
+  );
 }
 
 // 🪨 BATU
-else if(type === "rock"){
-  ctx.fillStyle = "#6e6e6e";
+for(let o of obstacles){
+  ctx.fillStyle = "#777";
   ctx.beginPath();
-  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
+  ctx.arc(o.x - camera.x, o.y - camera.y, o.size, 0, Math.PI*2);
   ctx.fill();
+}
+
+    ctx.fillStyle = "#555";
+
+// kiri
+ctx.fillRect(-camera.x, -camera.y, 20, mapHeight);
+
+// kanan
+ctx.fillRect(mapWidth - camera.x, -camera.y, 20, mapHeight);
+
+// atas
+ctx.fillRect(-camera.x, -camera.y, mapWidth, 20);
+
+// bawah
+ctx.fillRect(-camera.x, mapHeight - camera.y, mapWidth, 20);
+
+    // kalau di semak → transparan
+if(inBush){
+  ctx.globalAlpha = 0.3;
 }
     
   // 🔴 PLAYER
@@ -277,10 +389,17 @@ else if(type === "rock"){
     50
   );
 
+ctx.globalAlpha = 1;
+    
   // 🔵 PLAYER LAIN
   for(let id in otherPlayers){
   let p = otherPlayers[id];
 
+// 🔥 cek semak player lain
+    if(isInBush(p.x, p.y)){
+      ctx.globalAlpha = 0.3;
+    }
+    
   if(id !== playerId){
     let img = heroImages[id];
 
@@ -293,6 +412,9 @@ else if(type === "rock"){
         60
       );
     }
+
+ctx.globalAlpha = 1;
+    
   }
   }
 
