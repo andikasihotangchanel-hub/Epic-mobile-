@@ -56,8 +56,24 @@ const playerId = "p" + Math.floor(Math.random()*10000);
 
   let otherPlayers = {};
 
-onValue(ref(db, "players"), (snapshot) => {
+  let heroImages = {};
+
+  onValue(ref(db, "players"), (snapshot) => {
   otherPlayers = snapshot.val() || {};
+
+  for(let id in otherPlayers){
+    let p = otherPlayers[id];
+
+    if(!heroImages[id]){
+      let img = new Image();
+
+      if(p.hero === "andi"){
+        img.src = "andi.png";
+      }
+
+      heroImages[id] = img;
+    }
+  }
 });
 
 // 🔥 KIRIM DATA KE FIREBASE
@@ -65,14 +81,18 @@ function sendData(){
   set(ref(db, "players/" + playerId), player);
 }
 
-  window.startGame = function(hero){
+window.startGame = function(hero){
   player.hero = hero;
   document.getElementById("menu").style.display="none";
 
-    setInterval(sendData, 100); 
-    
-  gameLoop();
+  // 🔥 load gambar hero
+  if(hero === "andi"){
+    heroImg.src = "andi.png"; // nanti kamu ganti sesuai file kamu
   }
+
+  setInterval(sendData, 100);
+  gameLoop();
+}  
 
 // 🔥 AMBIL DATA PLAYER LAIN
 onValue(ref(db, "players"), (snapshot) => {
@@ -112,6 +132,8 @@ let ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+  let heroImg = new Image();
   
 let player = {
   x:200,
@@ -206,77 +228,72 @@ function draw(){
 
     let type = getTerrain(x, y);
 
-// 🌿 RUMPUT
+    // 🌿 RUMPUT
 if(type === "grass"){
   ctx.fillStyle = "#3a7d44";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+  ctx.beginPath();
+  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
+  ctx.fill();
 }
 
 // 🟫 TANAH
 else if(type === "dirt"){
   ctx.fillStyle = "#7a5230";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+  ctx.beginPath();
+  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
+  ctx.fill();
 }
 
 // 🟨 PASIR
 else if(type === "sand"){
   ctx.fillStyle = "#d9c27a";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+  ctx.beginPath();
+  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
+  ctx.fill();
 }
 
 // 🌊 AIR
 else if(type === "water"){
   ctx.fillStyle = "#2c6fa3";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
+  ctx.beginPath();
+  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
+  ctx.fill();
 }
 
-// 🪨 BATU (INI YANG KAMU MAKSUD)
+// 🪨 BATU
 else if(type === "rock"){
-  // dasar
   ctx.fillStyle = "#6e6e6e";
-  ctx.fillRect(x - camera.x, y - camera.y, 20, 20);
-
-  // bentuk batu biar gak kotak
-  ctx.fillStyle = "#555";
   ctx.beginPath();
-  ctx.arc(
-    x - camera.x + 10,
-    y - camera.y + 10,
-    6,
-    0,
-    Math.PI*2
-  );
+  ctx.arc(x - camera.x + 10, y - camera.y + 10, 10, 0, Math.PI*2);
   ctx.fill();
 }
-
+    
   // 🔴 PLAYER
-  ctx.fillStyle = "red";
-  ctx.beginPath();
-  ctx.arc(
-    player.x - camera.x,
-    player.y - camera.y,
-    player.size,
-    0,
-    Math.PI*2
+  ctx.drawImage(
+    heroImg,
+    player.x - camera.x - 25,
+    player.y - camera.y - 25,
+    50,
+    50
   );
-  ctx.fill();
 
   // 🔵 PLAYER LAIN
   for(let id in otherPlayers){
-    let p = otherPlayers[id];
+  let p = otherPlayers[id];
 
-    if(id !== playerId){
-      ctx.fillStyle = "blue";
-      ctx.beginPath();
-      ctx.arc(
-        p.x - camera.x,
-        p.y - camera.y,
-        25,
-        0,
-        Math.PI*2
+  if(id !== playerId){
+    let img = heroImages[id];
+
+    if(img && img.complete){
+      ctx.drawImage(
+        img,
+        p.x - camera.x - 30,
+        p.y - camera.y - 30,
+        60,
+        60
       );
-      ctx.fill();
     }
+  }
   }
 
   waves.forEach(w=>{
