@@ -338,13 +338,20 @@ let joystick = {
   dy: 0
 };
 
-// joystick
-canvas.addEventListener("touchstart", e=>{
+// joystick 
+  canvas.addEventListener("touchstart", e=>{
   e.preventDefault();
+
   let t = e.touches[0];
-  joystick.active = true;
-  joystick.startX = t.clientX;
-  joystick.startY = t.clientY;
+
+  // hanya kiri layar
+  if(t.clientX < window.innerWidth / 2){
+
+    joystick.active = true;
+
+    joystick.startX = t.clientX;
+    joystick.startY = t.clientY;
+  }
 });
 
 canvas.addEventListener("touchmove", e=>{
