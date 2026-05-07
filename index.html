@@ -332,6 +332,37 @@ function update(){
     }
   }
 
+  // 🏰 collision benteng
+for(let b of bases){
+
+  let baseSize = 60;
+
+  if(
+    player.x + player.size > b.x &&
+    player.x - player.size < b.x + baseSize &&
+    player.y + player.size > b.y &&
+    player.y - player.size < b.y + baseSize
+  ){
+
+    // dorong keluar dari benteng
+    if(player.x < b.x){
+      player.x = b.x - player.size;
+    }
+
+    if(player.x > b.x + baseSize){
+      player.x = b.x + baseSize + player.size;
+    }
+
+    if(player.y < b.y){
+      player.y = b.y - player.size;
+    }
+
+    if(player.y > b.y + baseSize){
+      player.y = b.y + baseSize + player.size;
+    }
+  }
+}
+
   // 🌊 river speed
   let inRiver = false;
   for(let r of rivers){
