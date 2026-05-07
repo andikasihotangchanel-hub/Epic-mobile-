@@ -155,8 +155,22 @@ let bushes = [];    // semak (sembunyi)
 let rivers = [];    // sungai (speed)
   
   let bases = [
-  {x:100, y:100, color:"blue"},
-  {x:1800, y:1800, color:"red"}
+{
+  x:100,
+  y:100,
+  color:"blue",
+  hp:100,
+  maxHp:100,
+  destroyed:false
+},
+{
+  x:1800,
+  y:1800,
+  color:"red",
+  hp:100,
+  maxHp:100,
+  destroyed:false
+}
 ];
 
 // fungsi random terrain (halus, bukan kotak)
@@ -225,7 +239,67 @@ let player = {
   hp:100
 };
 
-  function skill1(){ console.log("Skill 1"); }
+  function skill1(){
+
+  // ===== SKILL HERO =====
+
+  if(player.hero === "andi"){
+    player.hp += 5;
+  }
+
+  if(player.hero === "orbu"){
+    player.speed = 6;
+
+    setTimeout(()=>{
+      player.speed = 3;
+    },20000);
+  }
+
+  if(player.hero === "tor"){
+    console.log("Ular menyerang!");
+  }
+
+  if(player.hero === "sir"){
+    console.log("Magnet aktif!");
+  }
+
+  // ===== ATTACK BENTENG =====
+
+  for(let b of bases){
+
+    if(b.destroyed) continue;
+
+    let dx = player.x - b.x;
+    let dy = player.y - b.y;
+
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 120){
+
+      b.hp -= 10;
+
+      if(b.hp <= 0){
+
+        b.destroyed = true;
+
+        for(let i=0;i<30;i++){
+
+          particles.push({
+            x:b.x + 30,
+            y:b.y + 30,
+            dx:(Math.random()-0.5)*5,
+            dy:(Math.random()-0.5)*5,
+            life:60
+          });
+
+        }
+
+        alert("FINISH");
+      }
+    }
+  }
+  }
+  
 function skill2(){ console.log("Skill 2"); }
 function skill3(){ console.log("Skill 3"); }
 function skill4(){ console.log("Skill 4"); }
@@ -252,6 +326,9 @@ function skill4(){ console.log("Skill 4"); }
 
   let waves = [];
 let projectiles = [];
+
+  let baseBullets = [];
+let particles = [];
 
 let joystick = {
   active: false,
@@ -363,6 +440,17 @@ for(let b of bases){
   }
 }
 
+  // asap
+for(let p of particles){
+
+  p.x += p.dx;
+  p.y += p.dy;
+
+  p.life--;
+}
+
+particles = particles.filter(p => p.life > 0);
+
   // 🌊 river speed
   let inRiver = false;
   for(let r of rivers){
@@ -384,6 +472,55 @@ for(let b of bases){
   // kamera
   camera.x = player.x - canvas.width / 2;
   camera.y = player.y - canvas.height / 2;
+
+// 🔫 benteng auto attack
+for(let b of bases){
+
+  if(b.destroyed) continue;
+
+  let dx = player.x - b.x;
+  let dy = player.y - b.y;
+
+  let dist = Math.sqrt(dx*dx + dy*dy);
+
+  // 4cm game kira2 250 pixel
+  if(dist < 250){
+
+    if(Math.random() < 0.02){
+
+      baseBullets.push({
+        x:b.x + 30,
+        y:b.y + 30,
+        dx:dx/dist,
+        dy:dy/dist,
+        speed:6
+      });
+
+    }
+
+  }
+
+}
+
+
+ // update peluru benteng
+for(let bullet of baseBullets){
+
+  bullet.x += bullet.dx * bullet.speed;
+  bullet.y += bullet.dy * bullet.speed;
+
+  let dx = player.x - bullet.x;
+  let dy = player.y - bullet.y;
+
+  let dist = Math.sqrt(dx*dx + dy*dy);
+
+  // kena player
+  if(dist < 20){
+    player.hp -= 1;
+  }
+
+} 
+  
 }
 
 function draw(){
@@ -477,14 +614,84 @@ if(inBush){
   }
 
   // 🏰 BASE
-  for(let b of bases){
+for(let b of bases){
+
+  if(!b.destroyed){
+
     ctx.fillStyle = b.color;
+
     ctx.fillRect(
       b.x - camera.x,
       b.y - camera.y,
-      60, 60
+      60,
+      60
     );
+
+    // HP BAR
+    ctx.fillStyle = "red";
+
+    ctx.fillRect(
+      b.x - camera.x,
+      b.y - camera.y - 15,
+      60,
+      8
+    );
+
+    ctx.fillStyle = "lime";
+
+    ctx.fillRect(
+      b.x - camera.x,
+      b.y - camera.y - 15,
+      (b.hp / b.maxHp) * 60,
+      8
+    );
+
   }
+
+}
+
+  // 🔫 bullet benteng
+for(let bullet of baseBullets){
+
+  ctx.fillStyle = "yellow";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    bullet.x - camera.x,
+    bullet.y - camera.y,
+    5,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+}
+
+  // 💨 partikel asap
+for(let p of particles){
+
+  ctx.globalAlpha = p.life / 60;
+
+  ctx.fillStyle = "gray";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x - camera.x,
+    p.y - camera.y,
+    10,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+}
+
+ctx.globalAlpha = 1;
+  
 
   // UI
   ctx.fillStyle="white";
