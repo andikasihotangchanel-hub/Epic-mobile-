@@ -168,7 +168,7 @@ let rivers = [];    // sungai (speed)
   x:100,
   y:100,
   color:"blue",
-  team:"blue"
+  team:"blue", 
   hp:100,
   maxHp:100,
   destroyed:false
@@ -247,8 +247,8 @@ let player = {
   size:30,
   speed:3,
   hero:"",
-  hp:100
-  team: Math.random() > 0.5 ? "blue" : "red"
+  hp:100,
+team: Math.random() > 0.5 ? "blue" : "red"
 };
 
   function skill1(){
@@ -497,7 +497,7 @@ for(let b of bases){
 
   if(b.destroyed) continue;
 
-  if(player.team !== b.team)
+  if(player.team !== b.team){
 
   let dx = player.x - b.x;
   let dy = player.y - b.y;
@@ -521,7 +521,7 @@ for(let b of bases){
 
   }
 
-}
+  }
 
 
  // update peluru benteng
