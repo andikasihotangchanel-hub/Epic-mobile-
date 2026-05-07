@@ -124,6 +124,15 @@ function sendData(){
 
 window.startGame = function(hero){
   player.hero = hero;
+
+if(player.team === "blue"){
+  player.x = 150;
+  player.y = 150;
+}else{
+  player.x = 1700;
+  player.y = 1700;
+}
+  
   document.getElementById("menu").style.display="none";
 
   // 🔥 load gambar hero
@@ -159,6 +168,7 @@ let rivers = [];    // sungai (speed)
   x:100,
   y:100,
   color:"blue",
+  team:"blue"
   hp:100,
   maxHp:100,
   destroyed:false
@@ -167,6 +177,7 @@ let rivers = [];    // sungai (speed)
   x:1800,
   y:1800,
   color:"red",
+  team:"red",
   hp:100,
   maxHp:100,
   destroyed:false
@@ -237,6 +248,7 @@ let player = {
   speed:3,
   hero:"",
   hp:100
+  team: Math.random() > 0.5 ? "blue" : "red"
 };
 
   function skill1(){
@@ -484,6 +496,8 @@ particles = particles.filter(p => p.life > 0);
 for(let b of bases){
 
   if(b.destroyed) continue;
+
+  if(player.team !== b.team)
 
   let dx = player.x - b.x;
   let dy = player.y - b.y;
