@@ -275,6 +275,37 @@ team: Math.random() > 0.5 ? "blue" : "red"
     console.log("Magnet aktif!");
   }
 
+    // efek serangan
+  attacks.push({
+    x: player.x,
+    y: player.y,
+    radius: 20,
+    life: 15
+  });
+
+  // DAMAGE PLAYER LAIN
+  for(let id in otherPlayers){
+
+    let enemy = otherPlayers[id];
+
+    if(enemy.team === player.team) continue;
+
+    let dx = player.x - enemy.x;
+    let dy = player.y - enemy.y;
+
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 120){
+
+      enemy.hp -= 10;
+
+      set(ref(db,"players/" + id), enemy);
+
+    }
+
+  }
+    
+
   // ===== ATTACK BENTENG =====
 
   for(let b of bases){
@@ -338,6 +369,7 @@ function skill4(){ console.log("Skill 4"); }
 
   let waves = [];
 let projectiles = [];
+  let attacks = [];
 
   let baseBullets = [];
 let particles = [];
@@ -488,6 +520,16 @@ particles = particles.filter(p => p.life > 0);
     player.speed = 3;
   }
 
+  // update animasi attack
+for(let a of attacks){
+
+  a.radius += 3;
+  a.life--;
+
+}
+
+attacks = attacks.filter(a => a.life > 0);
+
   // kamera
   camera.x = player.x - canvas.width / 2;
   camera.y = player.y - canvas.height / 2;
@@ -611,6 +653,26 @@ if(inBush){
       50,
       50
     );
+
+// HP BAR PLAYER SENDIRI
+ctx.fillStyle = "red";
+
+ctx.fillRect(
+  player.x - camera.x - 20,
+  player.y - camera.y - 35,
+  40,
+  6
+);
+
+ctx.fillStyle = "lime";
+
+ctx.fillRect(
+  player.x - camera.x - 20,
+  player.y - camera.y - 35,
+  (player.hp / 100) * 40,
+  6
+);
+    
   } else {
     // fallback kalau gambar belum load
     ctx.fillStyle = "red";
@@ -632,6 +694,26 @@ if(inBush){
           50,
           50
         );
+
+// HP BAR PLAYER
+ctx.fillStyle = "red";
+
+ctx.fillRect(
+  p.x - camera.x - 20,
+  p.y - camera.y - 35,
+  40,
+  6
+);
+
+ctx.fillStyle = "lime";
+
+ctx.fillRect(
+  p.x - camera.x - 20,
+  p.y - camera.y - 35,
+  (p.hp / 100) * 40,
+  6
+);
+        
       }
     }
   }
