@@ -534,37 +534,53 @@ attacks = attacks.filter(a => a.life > 0);
   camera.x = player.x - canvas.width / 2;
   camera.y = player.y - canvas.height / 2;
 
-// 🔫 benteng auto attack
+// ===== ATTACK BENTENG =====
 for(let b of bases){
 
-  if(b.destroyed) continue;
+  // jangan serang tim sendiri
+  if(b.team === player.team) continue;
 
-  if(player.team !== b.team){
+  // kalau sudah hancur skip
+  if(b.destroyed) continue;
 
   let dx = player.x - b.x;
   let dy = player.y - b.y;
 
   let dist = Math.sqrt(dx*dx + dy*dy);
 
-  // 4cm game kira2 250 pixel
-  if(dist < 250){
+  // jarak serang
+  if(dist < 120){
 
-    if(Math.random() < 0.02){
+    b.hp -= 10;
 
-      baseBullets.push({
-        x:b.x + 30,
-        y:b.y + 30,
-        dx:dx/dist,
-        dy:dy/dist,
-        speed:6
-      });
+    // animasi attack
+    attacks.push({
+      x:b.x + 30,
+      y:b.y + 30,
+      radius:20,
+      life:10
+    });
 
+    // hancur
+    if(b.hp <= 0){
+
+      b.destroyed = true;
+
+      for(let i=0;i<30;i++){
+
+        particles.push({
+          x:b.x + 30,
+          y:b.y + 30,
+          dx:(Math.random()-0.5)*5,
+          dy:(Math.random()-0.5)*5,
+          life:60
+        });
+
+      }
+
+      alert("FINISH");
     }
-
   }
-
-  }
-
 }
 
 
@@ -802,6 +818,30 @@ ctx.globalAlpha = 1;
   ctx.fillStyle="white";
   ctx.fillText("Hero: "+player.hero,10,20);
   ctx.fillText("HP: "+player.hp,10,40);
+
+// ⚡ ANIMASI ATTACK
+for(let a of attacks){
+
+  ctx.globalAlpha = a.life / 15;
+
+  ctx.strokeStyle = "orange";
+  ctx.lineWidth = 4;
+
+  ctx.beginPath();
+
+  ctx.arc(
+    a.x - camera.x,
+    a.y - camera.y,
+    a.radius,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.stroke();
+}
+
+ctx.globalAlpha = 1;
+  
 
 // 🎮 JOYSTICK VISUAL
 if(joystick.active){
