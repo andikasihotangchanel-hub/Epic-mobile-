@@ -371,6 +371,8 @@ let player = {
   team: Math.random() > 0.5 ? "blue" : "red"
 };
 
+  updateRankUI();
+
   function skill1(){
 
   // ===== SKILL HERO =====
@@ -783,6 +785,7 @@ for(let b of bases){
 
   if(b.destroyed) continue;
 
+
   // ===== SERANG PLAYER LAIN =====
   for(let id in otherPlayers){
 
@@ -815,7 +818,7 @@ for(let b of bases){
 
   }
 
-  // ===== SERANG PLAYER SENDIRI KAMU =====
+  // serang player sendiri
   if(player.team !== b.team){
 
     let dx = player.x - b.x;
@@ -833,7 +836,7 @@ for(let b of bases){
           dx:dx/dist,
           dy:dy/dist,
           speed:6,
-          target:"me"
+          target:"player"
         });
 
       }
@@ -842,7 +845,7 @@ for(let b of bases){
 
   }
 
-}
+  }
   
   // jangan serang tim sendiri
   if(b.team === player.team) continue;
