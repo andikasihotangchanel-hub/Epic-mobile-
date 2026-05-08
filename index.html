@@ -143,10 +143,6 @@ window.startGame = function(hero){
 
   updateRankUI();
 
-  document.getElementById("rankText").innerText =
-"Rank: " + player.rank +
-" | Win: " + player.wins;
-
 if(player.team === "blue"){
   player.x = 150;
   player.y = 150;
@@ -482,6 +478,11 @@ team: Math.random() > 0.5 ? "blue" : "red"
 updateRank();
 
           updateRankUI();
+
+document.getElementById("rankText").innerText =
+"Rank: " + player.rank +
+" | Win: " + player.wins;
+          
           let img = document.getElementById("rankImg");
 
   if(player.rank === "Warrior"){
