@@ -518,31 +518,7 @@ let player = {
 updateRank();
 
           updateRankUI();
-
-document.getElementById("rankText").innerText =
-"Rank: " + player.rank +
-" | Win: " + player.wins;
-          
-          let img = document.getElementById("rankImg");
-
-  if(player.rank === "Warrior"){
-    img.src = "warrior.png";
-  }
-
-  if(player.rank === "Master"){
-    img.src = "master.png";
-  }
-
-  if(player.rank === "Grand Master"){
-    img.src = "grandmaster.png";
-  }
-
-  if(player.rank === "Elite"){
-    img.src = "elite.png";
-  }
-
         }
-
 }else{
 
   alert("DEFEAT");
@@ -777,9 +753,6 @@ attacks = attacks.filter(a => a.life > 0);
   camera.x = player.x - canvas.width / 2;
   camera.y = player.y - canvas.height / 2;
 
-// ===== ATTACK BENTENG =====
-for(let b of bases){
-
 // 🔫 benteng auto attack
 for(let b of bases){
 
@@ -961,7 +934,7 @@ else{
 
 } 
   
-}
+
 }
 
 function draw(){
