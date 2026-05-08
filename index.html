@@ -152,7 +152,9 @@ if(player.team === "blue"){
 }
   
   document.getElementById("menu").style.display="none";
-
+  
+setInterval(sendData, 100);
+  
   // 🔥 load gambar hero
   if(hero === "andi"){
     heroImg.src = "andi.png"; // nanti kamu ganti sesuai file kamu
@@ -1231,6 +1233,12 @@ if(joystick.active){
 }
  
 function gameLoop(){
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();{
   update();
   draw();
   requestAnimationFrame(gameLoop);
