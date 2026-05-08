@@ -172,8 +172,6 @@ if(hero === "sir"){
   heroImg.src = "sir.png";
 }
 
-  setInterval(sendData, 100);
-  gameLoop();
 }  
 
 // 🔥 AMBIL DATA PLAYER LAIN
@@ -1237,12 +1235,7 @@ function gameLoop(){
   draw();
   requestAnimationFrame(gameLoop);
 }
-
-gameLoop();{
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
+  
 </script>
 
 </body>
