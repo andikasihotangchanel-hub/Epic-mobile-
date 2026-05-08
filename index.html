@@ -138,41 +138,43 @@ function sendData(){
   set(ref(db, "players/" + playerId), player);
 }
 
-window.startGame = function(hero){
+ window.startGame = function(hero){
   player.hero = hero;
 
   updateRankUI();
 
-if(player.team === "blue"){
-  player.x = 150;
-  player.y = 150;
-}else{
-  player.x = 1700;
-  player.y = 1700;
-}
-  
+  if(player.team === "blue"){
+    player.x = 150;
+    player.y = 150;
+  }else{
+    player.x = 1700;
+    player.y = 1700;
+  }
+
   document.getElementById("menu").style.display="none";
-  
-setInterval(sendData, 100);
-  
-  // 🔥 load gambar hero
+
+  sendData(); // TAMBAH INI
+
+  if(!window.dataLoop){
+  window.dataLoop = setInterval(sendData, 100);
+  }
+
   if(hero === "andi"){
-    heroImg.src = "andi.png"; // nanti kamu ganti sesuai file kamu
+    heroImg.src = "andi.png";
   }
 
   if(hero === "orbu"){
-  heroImg.src = "orbu.png";
-}
+    heroImg.src = "orbu.png";
+  }
 
-if(hero === "tor"){
-  heroImg.src = "tor.png";
-}
+  if(hero === "tor"){
+    heroImg.src = "tor.png";
+  }
 
-if(hero === "sir"){
-  heroImg.src = "sir.png";
-}
-
-}  
+  if(hero === "sir"){
+    heroImg.src = "sir.png";
+  }
+ }
 
 // 🔥 AMBIL DATA PLAYER LAIN
 onValue(ref(db, "players"), (snapshot) => {
