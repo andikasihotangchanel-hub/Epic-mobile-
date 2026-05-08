@@ -56,6 +56,7 @@ canvas{
 
 <div id="menu">
   <h1>Pilih Hero</h1>
+  <h2 id="rankText"></h2>
   <button onclick="startGame('andi')">Andi_Pro</button>
   <button onclick="startGame('orbu')">Orbu</button>
   <button onclick="startGame('tor')">Torbandolok</button>
@@ -138,6 +139,10 @@ function sendData(){
 
 window.startGame = function(hero){
   player.hero = hero;
+
+  document.getElementById("rankText").innerText =
+"Rank: " + player.rank +
+" | Win: " + player.wins;
 
 if(player.team === "blue"){
   player.x = 150;
@@ -306,6 +311,16 @@ canvas.height = window.innerHeight;
 window.onerror = function(msg, url, line){
   console.log("ERROR:", msg, "di baris:", line);
 };
+
+  const ranks = [
+  "Warrior",
+  "Master",
+  "Grand Master",
+  "Elite",
+  "Elite Master",
+  "Epick Legends",
+  "Gamertag"
+];
   
   
 let player = {
@@ -315,6 +330,7 @@ let player = {
   speed:3,
   hero:"",
   hp:100,
+  rank:"Warrior",
 team: Math.random() > 0.5 ? "blue" : "red"
 };
 
@@ -458,6 +474,10 @@ team: Math.random() > 0.5 ? "blue" : "red"
 
   alert("FINISH");
 
+          player.wins++;
+
+updateRank();
+
 }else{
 
   alert("DEFEAT");
@@ -493,6 +513,17 @@ document.getElementById("menu").style.display = "flex";
 function skill2(){ console.log("Skill 2"); }
 function skill3(){ console.log("Skill 3"); }
 function skill4(){ console.log("Skill 4"); }
+
+  function updateRank(){
+
+  let rankIndex = Math.floor(player.wins / 10);
+
+  if(rankIndex >= ranks.length){
+    rankIndex = ranks.length - 1;
+  }
+
+  player.rank = ranks[rankIndex];
+  }
 
   window.addEventListener("keydown", e=>{
   if(e.key === "1") skill1();
