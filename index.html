@@ -108,6 +108,10 @@ const playerId = "p" + Math.floor(Math.random()*10000);
     if(!heroImages[id]){
       let img = new Image();
 
+      if(hero === "orbu"){
+  heroImg.src = "orbu.png";
+      }
+
       if(p.hero === "andi"){
         img.src = "andi.png";
       }
