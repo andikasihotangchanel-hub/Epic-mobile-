@@ -654,7 +654,7 @@ function useSkill(){
 window.addEventListener("click", useSkill);
 
 function update(){
-  // gerak
+  // gerak player
   if(joystick.active){
     player.x += joystick.dx * player.speed;
     player.y += joystick.dy * player.speed;
@@ -762,36 +762,36 @@ for(let b of bases){
 
 
   // ===== SERANG PLAYER LAIN =====
-  for(let id in otherPlayers){
+for(let id in otherPlayers){
 
-    let enemy = otherPlayers[id];
+  let enemy = otherPlayers[id];
 
-    // jangan serang 1 tim
-    if(enemy.team === b.team) continue;
+  // jangan serang 1 tim
+  if(enemy.team === b.team) continue;
 
-    let dx = enemy.x - b.x;
-    let dy = enemy.y - b.y;
+  let dx = enemy.x - b.x;
+  let dy = enemy.y - b.y;
 
-    let dist = Math.sqrt(dx*dx + dy*dy);
+  let dist = Math.sqrt(dx*dx + dy*dy);
 
-    if(dist < 250){
+  if(dist < 250){
 
-      if(Math.random() < 0.02){
+    if(Math.random() < 0.02){
 
-        baseBullets.push({
-          x:b.x + 30,
-          y:b.y + 30,
-          dx:dx/dist,
-          dy:dy/dist,
-          speed:6,
-          target:id
-        });
+      baseBullets.push({
+        x:b.x + 30,
+        y:b.y + 30,
+        dx:dx/dist,
+        dy:dy/dist,
+        speed:6,
+        target:id
+      });
 
-      }
-
-    
+    }
 
   }
+
+} // <- PENUTUP for otherPlayers
 
   // serang player sendiri
   if(player.team !== b.team){
