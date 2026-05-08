@@ -608,6 +608,72 @@ attacks = attacks.filter(a => a.life > 0);
 // ===== ATTACK BENTENG =====
 for(let b of bases){
 
+// 🔫 benteng auto attack
+for(let b of bases){
+
+  if(b.destroyed) continue;
+
+  // ===== SERANG PLAYER LAIN =====
+  for(let id in otherPlayers){
+
+    let enemy = otherPlayers[id];
+
+    // jangan serang 1 tim
+    if(enemy.team === b.team) continue;
+
+    let dx = enemy.x - b.x;
+    let dy = enemy.y - b.y;
+
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 250){
+
+      if(Math.random() < 0.02){
+
+        baseBullets.push({
+          x:b.x + 30,
+          y:b.y + 30,
+          dx:dx/dist,
+          dy:dy/dist,
+          speed:6,
+          target:id
+        });
+
+      }
+
+    
+
+  }
+
+  // ===== SERANG PLAYER SENDIRI KAMU =====
+  if(player.team !== b.team){
+
+    let dx = player.x - b.x;
+    let dy = player.y - b.y;
+
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 250){
+
+      if(Math.random() < 0.02){
+
+        baseBullets.push({
+          x:b.x + 30,
+          y:b.y + 30,
+          dx:dx/dist,
+          dy:dy/dist,
+          speed:6,
+          target:"me"
+        });
+
+      }
+
+    }
+
+  }
+
+}
+  
   // jangan serang tim sendiri
   if(b.team === player.team) continue;
 
@@ -687,13 +753,42 @@ for(let bullet of baseBullets){
 
   let dist = Math.sqrt(dx*dx + dy*dy);
 
-  // kena player
+  // kena player sendiri
+if(bullet.target === "player"){
+
   if(dist < 20){
     player.hp -= 1;
   }
 
+}
+
+// kena player lain
+else{
+
+  let enemy = otherPlayers[bullet.target];
+
+  if(enemy){
+
+    let ex = enemy.x - bullet.x;
+    let ey = enemy.y - bullet.y;
+
+    let edist = Math.sqrt(ex*ex + ey*ey);
+
+    if(edist < 20){
+
+      enemy.hp -= 1;
+
+      set(ref(db,"players/" + bullet.target), enemy);
+
+    }
+
+  }
+
+}
+
 } 
   
+}
 }
 
 function draw(){
