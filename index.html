@@ -305,11 +305,62 @@ team: Math.random() > 0.5 ? "blue" : "red"
   }
 
   if(player.hero === "orbu"){
-    player.speed = 6;
 
-    setTimeout(()=>{
-      player.speed = 3;
-    },20000);
+  // DASH CEPAT
+  player.x += joystick.dx * 200;
+  player.y += joystick.dy * 200;
+
+  // efek attack
+  attacks.push({
+    x: player.x,
+    y: player.y,
+    radius: 40,
+    life: 20
+  });
+
+  // DAMAGE PLAYER
+  for(let id in otherPlayers){
+
+    let enemy = otherPlayers[id];
+
+    if(enemy.team === player.team) continue;
+
+    let dx = player.x - enemy.x;
+    let dy = player.y - enemy.y;
+
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 160){
+
+      enemy.hp -= 25;
+
+      set(ref(db,"players/" + id), enemy);
+
+    }
+
+  }
+
+  // DAMAGE BASE
+  for(let b of bases){
+
+    if(b.team === player.team) continue;
+
+    if(b.destroyed) continue;
+
+    let dx = player.x - b.x;
+    let dy = player.y - b.y;
+
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 160){
+
+      b.hp -= 20;
+
+    }
+
+  }
+
+  }
   }
 
   if(player.hero === "tor"){
