@@ -57,6 +57,7 @@ canvas{
 <div id="menu">
   <h1>Pilih Hero</h1>
   <h2 id="rankText"></h2>
+  <img id="rankImg" width="220">
   <button onclick="startGame('andi')">Andi_Pro</button>
   <button onclick="startGame('orbu')">Orbu</button>
   <button onclick="startGame('tor')">Torbandolok</button>
@@ -139,6 +140,8 @@ function sendData(){
 
 window.startGame = function(hero){
   player.hero = hero;
+
+  updateRankUI();
 
   document.getElementById("rankText").innerText =
 "Rank: " + player.rank +
@@ -477,6 +480,27 @@ team: Math.random() > 0.5 ? "blue" : "red"
           player.wins++;
 
 updateRank();
+
+          updateRankUI();
+          let img = document.getElementById("rankImg");
+
+  if(player.rank === "Warrior"){
+    img.src = "warrior.png";
+  }
+
+  if(player.rank === "Master"){
+    img.src = "master.png";
+  }
+
+  if(player.rank === "Grand Master"){
+    img.src = "grandmaster.png";
+  }
+
+  if(player.rank === "Elite"){
+    img.src = "elite.png";
+  }
+
+        }
 
 }else{
 
