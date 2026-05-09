@@ -66,6 +66,13 @@ canvas{
 
 <canvas id="game"></canvas>
 
+  <div id="ui">
+  <button onclick="skill1()">1</button>
+  <button onclick="skill2()">2</button>
+  <button onclick="skill3()">3</button>
+  <button onclick="skill4()">4</button>
+  </div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
@@ -370,32 +377,6 @@ let player = {
 
   window.skill1 = function(){
 
-  // ===== SKILL HERO =====
-
-  if(player.hero === "andi"){
-    player.hp += 5;
-  }
-
-  if(player.hero === "orbu"){
-    player.x += joystick.dx * 200;
-    player.y += joystick.dy * 200;
-  }
-
-}
-
-window.skill2 = function(){
-  console.log("Skill 2");
-}
-
-window.skill3 = function(){
-  console.log("Skill 3");
-}
-
-window.skill4 = function(){
-  console.log("Skill 4");
-}
-
-  // efek attack
   attacks.push({
     x: player.x,
     y: player.y,
@@ -425,34 +406,24 @@ window.skill4 = function(){
 
   }
 
-  // DAMAGE BASE
-  for(let b of bases){
-
-    if(b.team === player.team) continue;
-
-    if(b.destroyed) continue;
-
-    let dx = player.x - b.x;
-    let dy = player.y - b.y;
-
-    let dist = Math.sqrt(dx*dx + dy*dy);
-
-    if(dist < 160){
-
-      b.hp -= 20;
-
-    }
-
+  // HERO SKILL
+  if(player.hero === "andi"){
+    player.hp += 5;
   }
 
+  if(player.hero === "orbu"){
+    player.x += joystick.dx * 200;
+    player.y += joystick.dy * 200;
   }
-  
+
   if(player.hero === "tor"){
     console.log("Ular menyerang!");
   }
 
   if(player.hero === "sir"){
     console.log("Magnet aktif!");
+  }
+
   }
 
     // efek serangan
