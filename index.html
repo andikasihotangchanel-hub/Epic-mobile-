@@ -384,7 +384,6 @@ let player = {
     life: 20
   });
 
-  // DAMAGE PLAYER
   for(let id in otherPlayers){
 
     let enemy = otherPlayers[id];
@@ -406,7 +405,6 @@ let player = {
 
   }
 
-  // HERO SKILL
   if(player.hero === "andi"){
     player.hp += 5;
   }
@@ -425,14 +423,6 @@ let player = {
   }
 
   }
-
-    // efek serangan
-  attacks.push({
-    x: player.x,
-    y: player.y,
-    radius: 20,
-    life: 15
-  });
 
   // DAMAGE PLAYER LAIN
   for(let id in otherPlayers){
