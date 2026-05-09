@@ -651,6 +651,8 @@ function useSkill(){
   }
 }
 
+  window.addEventListener("click", useSkill);
+
 function update(){
   // gerak player
   if(joystick.active){
@@ -758,40 +760,38 @@ for(let b of bases){
 
   if(b.destroyed) continue;
 
-
   // ===== SERANG PLAYER LAIN =====
-for(let id in otherPlayers){
+  for(let id in otherPlayers){
 
-  let enemy = otherPlayers[id];
+    let enemy = otherPlayers[id];
 
-  // jangan serang 1 tim
-  if(enemy.team === b.team) continue;
+    if(enemy.team === b.team) continue;
 
-  let dx = enemy.x - b.x;
-  let dy = enemy.y - b.y;
+    let dx = enemy.x - b.x;
+    let dy = enemy.y - b.y;
 
-  let dist = Math.sqrt(dx*dx + dy*dy);
+    let dist = Math.sqrt(dx*dx + dy*dy);
 
-  if(dist < 250){
+    if(dist < 250){
 
-    if(Math.random() < 0.02){
+      if(Math.random() < 0.02){
 
-      baseBullets.push({
-        x:b.x + 30,
-        y:b.y + 30,
-        dx:dx/dist,
-        dy:dy/dist,
-        speed:6,
-        target:id
-      });
+        baseBullets.push({
+          x:b.x + 30,
+          y:b.y + 30,
+          dx:dx/dist,
+          dy:dy/dist,
+          speed:6,
+          target:id
+        });
+
+      }
 
     }
 
   }
 
-} // <- PENUTUP for otherPlayers
-
-  // serang player sendiri
+  // ===== SERANG PLAYER SENDIRI =====
   if(player.team !== b.team){
 
     let dx = player.x - b.x;
@@ -818,25 +818,18 @@ for(let id in otherPlayers){
 
   }
 
-  }
-  
-  // jangan serang tim sendiri
+  // ===== DAMAGE BENTENG =====
   if(b.team === player.team) continue;
-
-  // kalau sudah hancur skip
-  if(b.destroyed) continue;
 
   let dx = player.x - b.x;
   let dy = player.y - b.y;
 
   let dist = Math.sqrt(dx*dx + dy*dy);
 
-  // jarak serang
   if(dist < 120){
 
     b.hp -= 10;
 
-    // animasi attack
     attacks.push({
       x:b.x + 30,
       y:b.y + 30,
@@ -844,47 +837,33 @@ for(let id in otherPlayers){
       life:10
     });
 
-    // hancur
     if(b.hp <= 0){
 
       b.destroyed = true;
 
-      for(let i=0;i<30;i++){
-
-        particles.push({
-          x:b.x + 30,
-          y:b.y + 30,
-          dx:(Math.random()-0.5)*5,
-          dy:(Math.random()-0.5)*5,
-          life:60
-        });
-
-      }
-
       alert("FINISH");
 
-// reset benteng
-for(let b of bases){
-  b.hp = 100;
-  b.destroyed = false;
-}
+      for(let bb of bases){
+        bb.hp = 100;
+        bb.destroyed = false;
+      }
 
-// reset player
-player.hp = 100;
+      player.hp = 100;
 
-if(player.team === "blue"){
-  player.x = 150;
-  player.y = 150;
-}else{
-  player.x = 1700;
-  player.y = 1700;
-}
+      if(player.team === "blue"){
+        player.x = 150;
+        player.y = 150;
+      }else{
+        player.x = 1700;
+        player.y = 1700;
+      }
 
-// kembali ke lobby
-document.getElementById("menu").style.display = "flex";
-      
+      document.getElementById("menu").style.display = "flex";
+
     }
+
   }
+
 }
 
 
