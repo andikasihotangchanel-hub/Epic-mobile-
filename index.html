@@ -396,9 +396,9 @@ let player = {
   team: Math.random() > 0.5 ? "blue" : "red"
 };
 
-  await loadPlayerData();
+  loadPlayerData();
 
-  async function saveProgress(){
+  function saveProgress(){
 
   await set(ref(db, "save/" + playerId), {
     wins: player.wins,
@@ -844,8 +844,6 @@ for(let b of bases){
 
     // DAMAGE benteng kalau dekat
     if(dist < 120){
-
-      b.hp -= 0.1;
 
       attacks.push({
         x:b.x + 30,
