@@ -75,7 +75,14 @@ canvas{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue,
+  remove,
+  get
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
 // config kamu (sudah benar)
 const firebaseConfig = {
@@ -93,7 +100,12 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // ID unik player
-const playerId = "p" + Math.floor(Math.random()*10000);
+let playerId = localStorage.getItem("epick_id");
+
+if(!playerId){
+  playerId = "p" + Math.floor(Math.random()*1000000);
+  localStorage.setItem("epick_id", playerId);
+}
 
 // contoh player
 
@@ -373,6 +385,32 @@ let player = {
   team: Math.random() > 0.5 ? "blue" : "red"
 };
 
+  loadPlayerData();
+
+  function saveProgress(){
+
+  set(ref(db, "save/" + playerId), {
+    wins: player.wins,
+    rank: player.rank
+  });
+
+  }
+
+        async function loadPlayerData(){
+
+  let snap = await get(ref(db, "save/" + playerId));
+
+  if(snap.exists()){
+
+    let data = snap.val();
+
+    player.wins = data.wins || 0;
+    player.rank = data.rank || "Warrior";
+
+    updateRankUI();
+  }
+        }
+
   updateRankUI();
 
   window.skill1 = function(){
@@ -496,6 +534,8 @@ let player = {
           updateRank();
 
           updateRankUI();
+
+  saveProgress();
 
         }else{
 
