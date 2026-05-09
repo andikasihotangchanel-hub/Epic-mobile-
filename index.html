@@ -422,9 +422,15 @@ let player = {
     console.log("Magnet aktif!");
   }
 
-  }
+  // efek serangan
+  attacks.push({
+    x: player.x,
+    y: player.y,
+    radius: 40,
+    life: 20
+  });
 
-  // DAMAGE PLAYER LAIN
+  // DAMAGE PLAYER
   for(let id in otherPlayers){
 
     let enemy = otherPlayers[id];
@@ -436,20 +442,20 @@ let player = {
 
     let dist = Math.sqrt(dx*dx + dy*dy);
 
-    if(dist < 120){
+    if(dist < 160){
 
-      enemy.hp -= 10;
+      enemy.hp -= 25;
 
       set(ref(db,"players/" + id), enemy);
 
     }
 
   }
-    
 
-  // ===== ATTACK BENTENG =====
-
+  // DAMAGE BASE
   for(let b of bases){
+
+    if(b.team === player.team) continue;
 
     if(b.destroyed) continue;
 
@@ -462,10 +468,12 @@ let player = {
 
       b.hp -= 10;
 
+      // base hancur
       if(b.hp <= 0){
 
         b.destroyed = true;
 
+        // efek partikel
         for(let i=0;i<30;i++){
 
           particles.push({
@@ -478,46 +486,68 @@ let player = {
 
         }
 
+        // menang kalah
         if(b.team !== player.team){
 
-  alert("FINISH");
+          alert("FINISH");
 
-  player.wins++;
+          player.wins++;
 
-  updateRank();
+          updateRank();
 
-  updateRankUI();
+          updateRankUI();
 
-}else{
+        }else{
 
-  alert("DEFEAT");
+          alert("DEFEAT");
 
         }
 
-// reset benteng
-for(let base of bases){
-  base.hp = 100;
-  base.destroyed = false;
-}
+        // reset benteng
+        for(let base of bases){
+          base.hp = 100;
+          base.destroyed = false;
+        }
 
-// reset hp
-player.hp = 100;
+        // reset hp
+        player.hp = 100;
 
-// kembali spawn
-if(player.team === "blue"){
-  player.x = 150;
-  player.y = 150;
-}else{
-  player.x = 1700;
-  player.y = 1700;
-}
+        // spawn ulang
+        if(player.team === "blue"){
+          player.x = 150;
+          player.y = 150;
+        }else{
+          player.x = 1700;
+          player.y = 1700;
+        }
 
-// kembali lobby
-document.getElementById("menu").style.display = "flex";
-        
+        // balik menu
+        document.getElementById("menu").style.display = "flex";
+
       }
+
     }
+
   }
+
+  // HERO SKILL
+  if(player.hero === "andi"){
+    player.hp += 5;
+  }
+
+  if(player.hero === "orbu"){
+    player.x += joystick.dx * 200;
+    player.y += joystick.dy * 200;
+  }
+
+  if(player.hero === "tor"){
+    console.log("Ular menyerang!");
+  }
+
+  if(player.hero === "sir"){
+    console.log("Magnet aktif!");
+  }
+
   }
   
 function skill2(){ console.log("Skill 2"); }
