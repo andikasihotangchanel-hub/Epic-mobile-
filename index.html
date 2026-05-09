@@ -17,6 +17,11 @@ body { margin:0; overflow:hidden; background:#111; color:white; font-family:sans
   z-index: 2000;
 }
 
+  #rankImg{
+  object-fit: contain;
+  margin-bottom: 10px;
+  }
+
  #ui{
   position: fixed;
   bottom: 20px;
@@ -55,13 +60,18 @@ canvas{
 <body>
 
 <div id="menu">
+
+  <img id="rankImg" width="320" height="320">
+
   <h1>Pilih Hero</h1>
+
   <h2 id="rankText"></h2>
-  <img id="rankImg" width="220">
+
   <button onclick="startGame('andi')">Andi_Pro</button>
   <button onclick="startGame('orbu')">Orbu</button>
   <button onclick="startGame('tor')">Torbandolok</button>
   <button onclick="startGame('sir')">Sirandos</button>
+
 </div>
 
 <canvas id="game"></canvas>
