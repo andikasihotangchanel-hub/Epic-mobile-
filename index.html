@@ -396,11 +396,11 @@ let player = {
   team: Math.random() > 0.5 ? "blue" : "red"
 };
 
-  loadPlayerData();
+  await loadPlayerData();
 
-  function saveProgress(){
+  async function saveProgress(){
 
-  set(ref(db, "save/" + playerId), {
+  await set(ref(db, "save/" + playerId), {
     wins: player.wins,
     rank: player.rank
   });
@@ -415,11 +415,17 @@ let player = {
 
     let data = snap.val();
 
-    player.wins = data.wins || 0;
+    player.wins = Number(data.wins) || 0;
     player.rank = data.rank || "Warrior";
 
-    updateRankUI();
+  }else{
+
+    player.wins = 0;
+    player.rank = "Warrior";
+
   }
+
+  updateRankUI();
         }
 
   updateRankUI();
@@ -540,7 +546,7 @@ let player = {
 
           alert("FINISH");
 
-          player.wins++;
+          player.wins += 1;
 
           updateRank();
 
