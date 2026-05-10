@@ -404,7 +404,7 @@ let player = {
 
 })();
 
-async function saveProgress(){
+function saveProgress(){
 
   // SIMPAN CEPAT KE HP
   localStorage.setItem("epick_save", JSON.stringify({
@@ -491,7 +491,7 @@ async function loadPlayerData(){
   updateRankUI();
         }
 
-  window.skill1 = async function(){
+  window.skill1 = function(){
 
   attacks.push({
     x: player.x,
