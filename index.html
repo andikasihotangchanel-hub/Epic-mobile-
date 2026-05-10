@@ -125,7 +125,19 @@ if(!playerId){
   let heroImages = {};
 
   onValue(ref(db, "players"), (snapshot) => {
-  otherPlayers = snapshot.val() || {};
+
+  let data = snapshot.val() || {};
+
+  otherPlayers = {};
+
+  for(let id in data){
+
+    // jangan masukkan diri sendiri
+    if(id !== playerId){
+      otherPlayers[id] = data[id];
+    }
+
+  }
 
   for(let id in otherPlayers){
 
@@ -960,7 +972,8 @@ else{
 
 } 
   
-
+sendData();
+  
 }
 
 function draw(){
