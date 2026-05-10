@@ -396,9 +396,9 @@ let player = {
   team: Math.random() > 0.5 ? "blue" : "red"
 };
 
-  loadPlayerData();
+  await loadPlayerData();
 
-  function saveProgress(){
+async  function saveProgress(){
 
   await set(ref(db, "save/" + playerId), {
     wins: player.wins,
