@@ -404,7 +404,7 @@ let player = {
 
 })();
 
-function saveProgress(){
+async function saveProgress(){
 
   // SIMPAN INSTAN KE HP
   localStorage.setItem("epick_save", JSON.stringify({
@@ -481,27 +481,6 @@ async function loadPlayerData(){
   }
 
 }
-
-        async function loadPlayerData(){
-
-  let snap = await get(ref(db, "save/" + playerId));
-
-  if(snap.exists()){
-
-    let data = snap.val();
-
-    player.wins = Number(data.wins) || 0;
-    player.rank = data.rank || "Warrior";
-
-  }else{
-
-    player.wins = 0;
-    player.rank = "Warrior";
-
-  }
-
-  updateRankUI();
-        }
 
   window.skill1 = function(){
 
