@@ -404,14 +404,71 @@ let player = {
 
 })();
 
-async  function saveProgress(){
+async function saveProgress(){
 
-  await set(ref(db, "save/" + playerId), {
+  // SIMPAN CEPAT KE HP
+  localStorage.setItem("epick_save", JSON.stringify({
     wins: player.wins,
     rank: player.rank
-  });
+  }));
+
+  // BACKUP KE FIREBASE
+  try{
+
+    await set(ref(db, "save/" + playerId), {
+      wins: player.wins,
+      rank: player.rank
+    });
+
+    console.log("Firebase saved");
+
+  }catch(err){
+
+    console.log("Firebase gagal tapi local save aman");
 
   }
+
+}
+
+async function loadPlayerData(){
+
+  // AMBIL DARI HP DULU (SUPER CEPAT)
+  let local = localStorage.getItem("epick_save");
+
+  if(local){
+
+    let data = JSON.parse(local);
+
+    player.wins = Number(data.wins) || 0;
+    player.rank = data.rank || "Warrior";
+
+    updateRankUI();
+
+  }
+
+  // LALU CEK FIREBASE
+  try{
+
+    let snap = await get(ref(db, "save/" + playerId));
+
+    if(snap.exists()){
+
+      let data = snap.val();
+
+      player.wins = Number(data.wins) || 0;
+      player.rank = data.rank || "Warrior";
+
+      updateRankUI();
+
+    }
+
+  }catch(err){
+
+    console.log("Load firebase gagal");
+
+  }
+
+}
 
         async function loadPlayerData(){
 
@@ -552,11 +609,11 @@ async  function saveProgress(){
 
           player.wins += 1;
 
-          updateRank();
+updateRank();
 
-          updateRankUI();
+updateRankUI();
 
-  saveProgress();
+await saveProgress();
 
         }else{
 
