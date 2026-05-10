@@ -204,47 +204,6 @@ onValue(ref(db, "players"), (snapshot) => {
   console.log("SEMUA PLAYER:", data);
 });
 
-// baca status game
-onValue(ref(db, "gameState"), (snapshot)=>{
-
-  let game = snapshot.val();
-
-  if(!game) return;
-
-  // menang
-  if(game.winner === player.team){
-
-    alert("FINISH");
-
-  }else{
-
-    alert("DEFEAT");
-
-  }
-
-  // reset benteng
-  for(let base of bases){
-    base.hp = 100;
-    base.destroyed = false;
-  }
-
-  // reset hp
-  player.hp = 100;
-
-  // spawn ulang
-  if(player.team === "blue"){
-    player.x = 150;
-    player.y = 150;
-  }else{
-    player.x = 1700;
-    player.y = 1700;
-  }
-
-  // balik lobby
-  document.getElementById("menu").style.display = "flex";
-
-});
-
 // 🔥 HAPUS SAAT KELUAR
 window.addEventListener("beforeunload", ()=>{
   remove(ref(db, "players/" + playerId));
@@ -897,30 +856,46 @@ for(let b of bases){
 
       if(b.hp <= 0){
 
-        b.destroyed = true;
+  b.destroyed = true;
 
-        alert("FINISH");
+  if(b.team !== player.team){
 
-        // reset benteng
-        for(let bb of bases){
-          bb.hp = 100;
-          bb.destroyed = false;
-        }
+    alert("FINISH");
 
-        // reset player
-        player.hp = 100;
+    player.wins += 1;
 
-        if(player.team === "blue"){
-          player.x = 150;
-          player.y = 150;
-        }else{
-          player.x = 1700;
-          player.y = 1700;
-        }
+    updateRank();
+    updateRankUI();
 
-        // balik menu
-        document.getElementById("menu").style.display = "flex";
+    await saveProgress();
 
+  }else{
+
+    alert("DEFEAT");
+
+  }
+
+  // reset semua
+  for(let base of bases){
+    base.hp = 100;
+    base.destroyed = false;
+  }
+
+  player.hp = 100;
+
+  // spawn ulang
+  if(player.team === "blue"){
+    player.x = 150;
+    player.y = 150;
+  }else{
+    player.x = 1700;
+    player.y = 1700;
+  }
+
+  // tampilkan lobby
+  document.getElementById("menu").style.display = "flex";
+
+  return;
       }
 
     }
