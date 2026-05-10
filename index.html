@@ -396,7 +396,11 @@ let player = {
   team: Math.random() > 0.5 ? "blue" : "red"
 };
 
- loadPlayerData();
+ (async function(){
+
+  await loadPlayerData();
+
+})();
 
 async  function saveProgress(){
 
