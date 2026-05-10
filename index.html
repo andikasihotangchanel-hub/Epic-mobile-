@@ -876,7 +876,7 @@ for(let b of bases){
     updateRank();
     updateRankUI();
 
-    await saveProgress();
+    saveProgress();
 
   }else{
 
@@ -1234,7 +1234,8 @@ function gameLoop(){
   draw();
   requestAnimationFrame(gameLoop);
 }
-
+  
+loadPlayerData();
   gameLoop();
   
 </script>
