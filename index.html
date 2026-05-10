@@ -406,6 +406,18 @@ let player = {
 
 function saveProgress(){
 
+  // SIMPAN INSTAN KE HP
+  localStorage.setItem("epick_save", JSON.stringify({
+    wins: player.wins,
+    rank: player.rank
+  }));
+
+  // BACKUP ONLINE
+  set(ref(db, "save/" + playerId), {
+    wins: player.wins,
+    rank: player.rank
+  });
+
   // SIMPAN CEPAT KE HP
   localStorage.setItem("epick_save", JSON.stringify({
     wins: player.wins,
