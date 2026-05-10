@@ -91,8 +91,7 @@ import {
   ref,
   set,
   onValue,
-  remove,
-  get
+  remove
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
 // config kamu (sudah benar)
@@ -394,15 +393,7 @@ let player = {
   wins:0,
   rank:"Warrior",
   team: Math.random() > 0.5 ? "blue" : "red"
-};
-
- (async function(){
-
-  await loadPlayerData();
-
-   updateRankUI();
-
-})();
+}; 
 
 async function saveProgress(){
 
@@ -482,7 +473,7 @@ async function loadPlayerData(){
 
 }
 
-  window.skill1 = function(){
+  window.skill1 = async function(){
 
   attacks.push({
     x: player.x,
