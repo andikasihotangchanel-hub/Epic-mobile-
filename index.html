@@ -861,11 +861,10 @@ attacks = attacks.filter(a => a.life > 0);
 // kamera belakang player
 camera.x = player.x - canvas.width / 2;
 
-// kamera mengikuti player dari belakang
+// kamera pseudo 3D
+camera.x += ((player.x - canvas.width / 2) - camera.x) * 0.05;
 
-camera.x += ((player.x - canvas.width / 2) - camera.x) * 0.08;
-
-camera.y += ((player.y - canvas.height / 1.3) - camera.y) * 0.08;
+camera.y += ((player.y - canvas.height / 1.6) - camera.y) * 0.05;
 
 // 🔫 benteng auto attack
 for(let b of bases){
@@ -1061,35 +1060,45 @@ for(let b of bushes){
   ctx.fillRect(gx, gy + b.size, b.size, 5);
 }
   
-  // 🪨 BATU
+  // 🪨 BATU 3D
 for(let o of obstacles){
 
+  let bx = o.x - camera.x;
+  let by = o.y - camera.y;
+
+  let h = 20;
+
+  // atas
+  ctx.fillStyle = "#999";
+
+  ctx.beginPath();
+  ctx.moveTo(bx, by);
+  ctx.lineTo(bx + o.size, by);
+  ctx.lineTo(bx + o.size + h, by - h);
+  ctx.lineTo(bx + h, by - h);
+  ctx.closePath();
+  ctx.fill();
+
+  // depan
   ctx.fillStyle = "#777";
 
-  let bx = o.x - camera.x;
-let by = o.y - camera.y;
+  ctx.fillRect(
+    bx,
+    by,
+    o.size,
+    o.size
+  );
 
-// atas batu
-ctx.fillStyle = "#888";
-ctx.fillRect(bx, by, o.size, o.size);
+  // kanan
+  ctx.fillStyle = "#555";
 
-// sisi kanan
-ctx.fillStyle = "#666";
-ctx.fillRect(
-  bx + o.size,
-  by + 6,
-  6,
-  o.size
-);
-
-// sisi bawah
-ctx.fillStyle = "#555";
-ctx.fillRect(
-  bx + 6,
-  by + o.size,
-  o.size,
-  6
-);
+  ctx.beginPath();
+  ctx.moveTo(bx + o.size, by);
+  ctx.lineTo(bx + o.size + h, by - h);
+  ctx.lineTo(bx + o.size + h, by + o.size - h);
+  ctx.lineTo(bx + o.size, by + o.size);
+  ctx.closePath();
+  ctx.fill();
 }
 
   // 🧱 BATAS MAP BLOCK
