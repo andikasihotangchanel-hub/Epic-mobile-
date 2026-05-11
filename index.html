@@ -862,9 +862,10 @@ attacks = attacks.filter(a => a.life > 0);
 camera.x = player.x - canvas.width / 2;
 
 // kamera pseudo 3D
-camera.x += ((player.x - canvas.width / 2) - camera.x) * 0.05;
+let cam = iso(player.x, player.y);
 
-camera.y += ((player.y - canvas.height / 1.6) - camera.y) * 0.05;
+camera.x += (cam.x - camera.x) * 0.08;
+camera.y += (cam.y - camera.y) * 0.08;
 
 // 🔫 benteng auto attack
 for(let b of bases){
@@ -1012,6 +1013,16 @@ sendData();
   
 }
 
+  // KONVERSI 2D -> ISOMETRIC
+function iso(x, y){
+
+  return {
+    x: (x - y) * 0.5,
+    y: (x + y) * 0.25
+  };
+
+}
+
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
@@ -1063,8 +1074,10 @@ for(let b of bushes){
   // 🪨 BATU 3D
 for(let o of obstacles){
 
-  let bx = o.x - camera.x;
-  let by = o.y - camera.y;
+  let pos = iso(o.x, o.y);
+
+let bx = pos.x - camera.x + canvas.width/2;
+let by = pos.y - camera.y + canvas.height/2;
 
   let h = 20;
 
@@ -1167,8 +1180,10 @@ if(inBush){
   
 // 🔴 PLAYER
 
-let px = player.x - camera.x;
-let py = player.y - camera.y;
+let isoPos = iso(player.x, player.y);
+
+let px = isoPos.x - camera.x + canvas.width/2;
+let py = isoPos.y - camera.y + canvas.height/2;
 
 // nama
 ctx.fillStyle = "white";
@@ -1260,8 +1275,10 @@ ctx.fillRect(px - 20, py - 55, (player.hp/100)*40, 5);
 
   let p = otherPlayers[id];
 
-  let px = p.x - camera.x;
-let py = p.y - camera.y;
+  let isoPos = iso(p.x, p.y);
+
+let px = isoPos.x - camera.x + canvas.width/2;
+let py = isoPos.y - camera.y + canvas.height/2;
 
 // nama
 ctx.fillStyle = "white";
