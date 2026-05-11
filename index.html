@@ -1176,7 +1176,7 @@ ctx.font = "14px Arial";
 ctx.fillText(player.hero, px - 15, py - 40);
 
 // badan balok
-// depan
+// badan depan
 ctx.fillStyle =
 player.team === "blue"
 ? "#3498db"
@@ -1184,21 +1184,33 @@ player.team === "blue"
 
 ctx.fillRect(px - 15, py - 30, 30, 30);
 
-// sisi kanan
+// badan atas
+ctx.fillStyle =
+player.team === "blue"
+? "#5dade2"
+: "#ec7063";
+
+ctx.beginPath();
+ctx.moveTo(px - 15, py - 30);
+ctx.lineTo(px + 15, py - 30);
+ctx.lineTo(px + 25, py - 40);
+ctx.lineTo(px - 5, py - 40);
+ctx.closePath();
+ctx.fill();
+
+// badan samping
 ctx.fillStyle =
 player.team === "blue"
 ? "#21618c"
 : "#922b21";
 
-ctx.fillRect(px + 15, py - 24, 6, 30);
-
-// sisi bawah
-ctx.fillStyle =
-player.team === "blue"
-? "#1b4f72"
-: "#641e16";
-
-ctx.fillRect(px - 9, py, 30, 6);
+ctx.beginPath();
+ctx.moveTo(px + 15, py - 30);
+ctx.lineTo(px + 25, py - 40);
+ctx.lineTo(px + 25, py - 10);
+ctx.lineTo(px + 15, py);
+ctx.closePath();
+ctx.fill();
 
 // tangan kiri
 ctx.fillStyle = "#f5c28b";
@@ -1257,44 +1269,41 @@ ctx.font = "14px Arial";
 ctx.fillText(p.hero, px - 15, py - 40);
 
 // badan
-// depan badan
+// badan depan
 ctx.fillStyle =
-p.team === "blue"
+player.team === "blue"
 ? "#3498db"
 : "#e74c3c";
 
-ctx.fillRect(
-  px - 15,
-  py - 30,
-  30,
-  30
-);
+ctx.fillRect(px - 15, py - 30, 30, 30);
 
-// sisi kanan badan
+// badan atas
 ctx.fillStyle =
-p.team === "blue"
+player.team === "blue"
+? "#5dade2"
+: "#ec7063";
+
+ctx.beginPath();
+ctx.moveTo(px - 15, py - 30);
+ctx.lineTo(px + 15, py - 30);
+ctx.lineTo(px + 25, py - 40);
+ctx.lineTo(px - 5, py - 40);
+ctx.closePath();
+ctx.fill();
+
+// badan samping
+ctx.fillStyle =
+player.team === "blue"
 ? "#21618c"
 : "#922b21";
 
-ctx.fillRect(
-  px + 15,
-  py - 24,
-  6,
-  30
-);
-
-// sisi bawah badan
-ctx.fillStyle =
-p.team === "blue"
-? "#1b4f72"
-: "#641e16";
-
-ctx.fillRect(
-  px - 9,
-  py,
-  30,
-  6
-);
+ctx.beginPath();
+ctx.moveTo(px + 15, py - 30);
+ctx.lineTo(px + 25, py - 40);
+ctx.lineTo(px + 25, py - 10);
+ctx.lineTo(px + 15, py);
+ctx.closePath();
+ctx.fill();
 
 // tangan kiri
 ctx.fillStyle = "#f5c28b";
