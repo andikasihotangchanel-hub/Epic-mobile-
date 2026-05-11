@@ -23,26 +23,33 @@ body { margin:0; overflow:hidden; background:#111; color:white; font-family:sans
   }
 
  #ui{
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999999;
+  position:fixed;
+  right:2vw;
+  bottom:2vh;
   display:flex;
   flex-direction:column;
-  pointer-events:auto;
-}
+  gap:1vh;
+  z-index:999999;
+ }
 
-#ui button{
-  width:70px;
-  height:70px;
-  margin:5px;
+  #ui button{
+  width:10vw;
+  height:10vw;
+
+  min-width:55px;
+  min-height:55px;
+
+  max-width:90px;
+  max-height:90px;
+
   border:none;
   border-radius:50%;
+
   background:#222;
   color:white;
-  font-size:24px;
-  opacity:0.9;
-}   
+
+  font-size:3vw;
+  }
   
 button {
   padding:10px; margin:5px;
@@ -694,6 +701,48 @@ canvas.addEventListener("touchend", ()=>{
   joystick.dy = 0;
 });
 
+  // RESPONSIVE UI
+function resizeGame(){
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let ui = document.getElementById("ui");
+
+  // layar kecil
+  if(window.innerWidth < 700){
+
+    ui.style.bottom = "10px";
+    ui.style.right = "10px";
+
+    for(let b of ui.children){
+      b.style.width = "55px";
+      b.style.height = "55px";
+      b.style.fontSize = "18px";
+    }
+
+  }
+
+  // tablet / horizontal
+  else{
+
+    ui.style.bottom = "20px";
+    ui.style.right = "20px";
+
+    for(let b of ui.children){
+      b.style.width = "80px";
+      b.style.height = "80px";
+      b.style.fontSize = "26px";
+    }
+
+  }
+
+}
+
+window.addEventListener("resize", resizeGame);
+
+resizeGame();
+
 // skill
 function useSkill(){
   if(player.hero==="andi"){
@@ -812,8 +861,11 @@ attacks = attacks.filter(a => a.life > 0);
 // kamera belakang player
 camera.x = player.x - canvas.width / 2;
 
-// player agak bawah layar
-camera.y = player.y - canvas.height * 0.7;
+// kamera mengikuti player dari belakang
+
+camera.x += ((player.x - canvas.width / 2) - camera.x) * 0.08;
+
+camera.y += ((player.y - canvas.height / 1.3) - camera.y) * 0.08;
 
 // 🔫 benteng auto attack
 for(let b of bases){
