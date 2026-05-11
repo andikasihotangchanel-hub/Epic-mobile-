@@ -92,6 +92,77 @@ canvas{
   </div>
 
 <script type="module">
+
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.158/build/three.module.js';
+
+const scene = new THREE.Scene();
+
+const camera =
+new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+const renderer =
+new THREE.WebGLRenderer();
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+document.body.appendChild(renderer.domElement);
+
+// BLOCK
+const geo =
+new THREE.BoxGeometry(1,1,1);
+
+const mat =
+new THREE.MeshLambertMaterial({
+color:0x55aa55
+});
+
+// TANAH
+for(let x=-20;x<20;x++){
+
+  for(let z=-20;z<20;z++){
+
+    const block =
+    new THREE.Mesh(geo, mat);
+
+    block.position.set(x,0,z);
+
+    scene.add(block);
+
+  }
+
+}
+
+// LIGHT
+const light =
+new THREE.DirectionalLight(0xffffff,1);
+
+light.position.set(5,10,5);
+
+scene.add(light);
+
+// PLAYER CAMERA
+camera.position.set(0,2,5);
+
+// LOOP
+function animate(){
+
+  requestAnimationFrame(animate);
+
+  renderer.render(scene,camera);
+
+}
+
+animate();
+  
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import {
   getDatabase,
