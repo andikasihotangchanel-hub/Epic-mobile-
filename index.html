@@ -760,6 +760,18 @@ function useSkill(){
   }
 }
 
+  
+  // KONVERSI 2D -> ISOMETRIC
+function iso(x, y){
+
+  return {
+    x: (x - y) * 0.5,
+    y: (x + y) * 0.25
+  };
+
+}
+
+
 function update(){
   // gerak player
   if(joystick.active){
@@ -857,9 +869,6 @@ for(let a of attacks){
 }
 
 attacks = attacks.filter(a => a.life > 0);
-
-// kamera belakang player
-camera.x = player.x - canvas.width / 2;
 
 // kamera pseudo 3D
 let cam = iso(player.x, player.y);
@@ -1011,16 +1020,6 @@ else{
   
 sendData();
   
-}
-
-  // KONVERSI 2D -> ISOMETRIC
-function iso(x, y){
-
-  return {
-    x: (x - y) * 0.5,
-    y: (x + y) * 0.25
-  };
-
 }
 
 function draw(){
@@ -1407,8 +1406,6 @@ function draw(){
 
   }
 
-      }
-
 
   // 🏰 BASE
 for(let b of bases){
@@ -1542,6 +1539,7 @@ if(joystick.active){
   ctx.fill();
 
   ctx.globalAlpha = 1;
+}
 }
   
 }
