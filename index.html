@@ -1021,6 +1021,7 @@ else{
 sendData();
   
 }
+  let zoom = 2;
 
 function draw(){
 
@@ -1050,10 +1051,10 @@ function draw(){
       let pos = iso(worldX, worldY);
 
       let gx =
-      pos.x - camera.x + canvas.width/2;
+(pos.x - camera.x) * zoom + canvas.width/2;
 
-      let gy =
-      pos.y - camera.y + canvas.height/2;
+let gy =
+(pos.y - camera.y) * zoom + canvas.height/2;
 
       // rumput atas
       ctx.fillStyle = "#6b8e23";
@@ -1061,9 +1062,9 @@ function draw(){
       ctx.beginPath();
 
       ctx.moveTo(gx, gy);
-      ctx.lineTo(gx + 40, gy + 20);
+      ctx.lineTo(gx + 80, gy + 40);
       ctx.lineTo(gx, gy + 40);
-      ctx.lineTo(gx - 40, gy + 20);
+      ctx.lineTo(gx + 80, gy + 40);
 
       ctx.closePath();
       ctx.fill();
@@ -1291,7 +1292,7 @@ function draw(){
   ctx.beginPath();
 
   ctx.moveTo(px, py - 30);
-  ctx.lineTo(px + 18, py - 20);
+  ctx.lineTo(px + 36, py - 40);
   ctx.lineTo(px, py);
   ctx.lineTo(px - 18, py - 20);
 
@@ -1371,7 +1372,7 @@ function draw(){
     ctx.beginPath();
 
     ctx.moveTo(opx, opy - 30);
-    ctx.lineTo(opx + 18, opy - 20);
+    ctx.lineTo(px + 36, py - 40);
     ctx.lineTo(opx, opy);
     ctx.lineTo(opx - 18, opy - 20);
 
