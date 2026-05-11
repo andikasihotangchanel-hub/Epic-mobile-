@@ -809,9 +809,11 @@ for(let a of attacks){
 
 attacks = attacks.filter(a => a.life > 0);
 
-  // kamera
-  camera.x = player.x - canvas.width / 2;
-  camera.y = player.y - canvas.height / 2;
+// kamera belakang player
+camera.x = player.x - canvas.width / 2;
+
+// player agak bawah layar
+camera.y = player.y - canvas.height * 0.7;
 
 // 🔫 benteng auto attack
 for(let b of bases){
@@ -962,9 +964,19 @@ sendData();
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // 🌍 TANAH (background)
-  ctx.fillStyle = "#6b8e23";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // 🌌 LANGIT
+ctx.fillStyle = "#6ec6ff";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+// 🌍 TANAH
+ctx.fillStyle = "#6b8e23";
+
+ctx.fillRect(
+  0,
+  canvas.height / 2,
+  canvas.width,
+  canvas.height / 2
+);
 
   // 🌊 SUNGAI
   for(let r of rivers){
@@ -1068,44 +1080,48 @@ if(inBush){
   
 // 🔴 PLAYER
 
- let px = player.x - camera.x;
- let py = player.y - camera.y;
+let px = player.x - camera.x;
+let py = player.y - camera.y;
 
- // nama hero
- ctx.fillStyle = "white";
- ctx.font = "14px Arial";
- ctx.fillText(player.hero, px - 20, py - 45);
+// nama
+ctx.fillStyle = "white";
+ctx.font = "14px Arial";
+ctx.fillText(player.hero, px - 15, py - 40);
 
- // kepala
- ctx.fillStyle = "#f5c28b";
- ctx.fillRect(px - 10, py - 30, 20, 20);
-
- // badan
- ctx.fillStyle =
+// badan balok
+ctx.fillStyle =
 player.team === "blue"
 ? "#3498db"
 : "#e74c3c";
 
- // tangan kiri
- ctx.fillStyle = "#f5c28b";
- ctx.fillRect(px - 20, py - 10, 8, 25);
+ctx.fillRect(px - 15, py - 30, 30, 30);
 
- // tangan kanan
- ctx.fillRect(px + 12, py - 10, 8, 25);
+// tangan kiri
+ctx.fillStyle = "#f5c28b";
+ctx.fillRect(px - 22, py - 25, 7, 20);
 
- // kaki kiri
- ctx.fillStyle = "#222";
- ctx.fillRect(px - 10, py + 20, 8, 20);
+// tangan kanan
+ctx.fillRect(px + 15, py - 25, 7, 20);
 
- // kaki kanan
- ctx.fillRect(px + 2, py + 20, 8, 20);
+// kaki kiri
+ctx.fillStyle = "#222";
+ctx.fillRect(px - 10, py, 8, 18);
 
- // HP BAR
- ctx.fillStyle = "red";
- ctx.fillRect(px - 20, py - 40, 40, 6);
+// kaki kanan
+ctx.fillRect(px + 2, py, 8, 18);
 
- ctx.fillStyle = "lime";
- ctx.fillRect(px - 20, py - 40, (player.hp / 100) * 40, 6);
+
+// kepala
+ctx.fillStyle = "#f5c28b";
+
+ctx.fillRect(px - 10, py - 45, 20, 15);
+
+// HP BAR
+ctx.fillStyle = "red";
+ctx.fillRect(px - 20, py - 55, 40, 5);
+
+ctx.fillStyle = "lime";
+ctx.fillRect(px - 20, py - 55, (player.hp/100)*40, 5);
   
 // 🔵 PLAYER LAIN
   for(let id in otherPlayers){
@@ -1113,39 +1129,48 @@ player.team === "blue"
   let p = otherPlayers[id];
 
   let px = p.x - camera.x;
-  let py = p.y - camera.y;
+let py = p.y - camera.y;
 
-  // nama hero
-  ctx.fillStyle = "white";
-  ctx.font = "14px Arial";
-  ctx.fillText(p.hero, px - 20, py - 45);
+// nama
+ctx.fillStyle = "white";
+ctx.font = "14px Arial";
+ctx.fillText(p.hero, px - 15, py - 40);
 
-  // kepala
-  ctx.fillStyle = "#f5c28b";
-  ctx.fillRect(px - 10, py - 30, 20, 20);
+// badan
+ctx.fillStyle =
+p.team === "blue"
+? "#3498db"
+: "#e74c3c";
 
-  // badan
-  ctx.fillStyle = p.team === "blue" ? "#3498db" : "#e74c3c";
-  ctx.fillRect(px - 12, py - 10, 24, 30);
+ctx.fillRect(px - 15, py - 30, 30, 30);
 
-  // tangan
-  ctx.fillStyle = "#f5c28b";
-  ctx.fillRect(px - 20, py - 10, 8, 25);
-  ctx.fillRect(px + 12, py - 10, 8, 25);
+// tangan kiri
+ctx.fillStyle = "#f5c28b";
+ctx.fillRect(px - 22, py - 25, 7, 20);
 
-  // kaki
-  ctx.fillStyle = "#222";
-  ctx.fillRect(px - 10, py + 20, 8, 20);
-  ctx.fillRect(px + 2, py + 20, 8, 20);
+// tangan kanan
+ctx.fillRect(px + 15, py - 25, 7, 20);
 
-  // HP BAR
-  ctx.fillStyle = "red";
-  ctx.fillRect(px - 20, py - 40, 40, 6);
+// kaki kiri
+ctx.fillStyle = "#222";
+ctx.fillRect(px - 10, py, 8, 18);
 
-  ctx.fillStyle = "lime";
-  ctx.fillRect(px - 20, py - 40, (p.hp / 100) * 40, 6);
+// kaki kanan
+ctx.fillRect(px + 2, py, 8, 18);
 
+
+// kepala
+ctx.fillStyle = "#f5c28b";
+ctx.fillRect(px - 10, py - 45, 20, 15);
+
+// HP
+ctx.fillStyle = "red";
+ctx.fillRect(px - 20, py - 55, 40, 5);
+
+ctx.fillStyle = "lime";
+ctx.fillRect(px - 20, py - 55, (p.hp/100)*40, 5);
   }
+
 
   // 🏰 BASE
 for(let b of bases){
