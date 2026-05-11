@@ -981,12 +981,24 @@ ctx.fillRect(
   // 🌊 SUNGAI
   for(let r of rivers){
     ctx.fillStyle = "#2c6fa3";
-    ctx.fillRect(
-  r.x - camera.x,
-  r.y - camera.y,
-  r.size,
-  r.size
-);
+  let rx = r.x - camera.x;
+let ry = r.y - camera.y;
+
+// atas
+ctx.fillStyle = "#3498db";
+ctx.fillRect(rx, ry, r.size, r.size);
+
+// sisi
+ctx.fillStyle = "#1f5f99";
+ctx.fillRect(rx, ry + r.size, r.size, 4);
+
+// atas
+ctx.fillStyle = "#1e4d2b";
+ctx.fillRect(gx, gy, b.size, b.size);
+
+// sisi
+ctx.fillStyle = "#163821";
+ctx.fillRect(gx, gy + b.size, b.size, 5);
   }
 
   // 🌿 SEMAK
@@ -1005,12 +1017,29 @@ for(let o of obstacles){
 
   ctx.fillStyle = "#777";
 
-  
-  ctx.fillRect(
-  o.x - camera.x,
-  o.y - camera.y,
-  o.size,
+  let bx = o.x - camera.x;
+let by = o.y - camera.y;
+
+// atas batu
+ctx.fillStyle = "#888";
+ctx.fillRect(bx, by, o.size, o.size);
+
+// sisi kanan
+ctx.fillStyle = "#666";
+ctx.fillRect(
+  bx + o.size,
+  by + 6,
+  6,
   o.size
+);
+
+// sisi bawah
+ctx.fillStyle = "#555";
+ctx.fillRect(
+  bx + 6,
+  by + o.size,
+  o.size,
+  6
 );
 }
 
@@ -1089,12 +1118,29 @@ ctx.font = "14px Arial";
 ctx.fillText(player.hero, px - 15, py - 40);
 
 // badan balok
+// depan
 ctx.fillStyle =
 player.team === "blue"
 ? "#3498db"
 : "#e74c3c";
 
 ctx.fillRect(px - 15, py - 30, 30, 30);
+
+// sisi kanan
+ctx.fillStyle =
+player.team === "blue"
+? "#21618c"
+: "#922b21";
+
+ctx.fillRect(px + 15, py - 24, 6, 30);
+
+// sisi bawah
+ctx.fillStyle =
+player.team === "blue"
+? "#1b4f72"
+: "#641e16";
+
+ctx.fillRect(px - 9, py, 30, 6);
 
 // tangan kiri
 ctx.fillStyle = "#f5c28b";
@@ -1112,9 +1158,25 @@ ctx.fillRect(px + 2, py, 8, 18);
 
 
 // kepala
+// kepala depan
 ctx.fillStyle = "#f5c28b";
 
-ctx.fillRect(px - 10, py - 45, 20, 15);
+ctx.fillRect(
+  px - 10,
+  py - 45,
+  20,
+  15
+);
+
+// sisi kepala
+ctx.fillStyle = "#d9a066";
+
+ctx.fillRect(
+  px + 10,
+  py - 40,
+  4,
+  15
+);
 
 // HP BAR
 ctx.fillStyle = "red";
@@ -1137,12 +1199,44 @@ ctx.font = "14px Arial";
 ctx.fillText(p.hero, px - 15, py - 40);
 
 // badan
+// depan badan
 ctx.fillStyle =
 p.team === "blue"
 ? "#3498db"
 : "#e74c3c";
 
-ctx.fillRect(px - 15, py - 30, 30, 30);
+ctx.fillRect(
+  px - 15,
+  py - 30,
+  30,
+  30
+);
+
+// sisi kanan badan
+ctx.fillStyle =
+p.team === "blue"
+? "#21618c"
+: "#922b21";
+
+ctx.fillRect(
+  px + 15,
+  py - 24,
+  6,
+  30
+);
+
+// sisi bawah badan
+ctx.fillStyle =
+p.team === "blue"
+? "#1b4f72"
+: "#641e16";
+
+ctx.fillRect(
+  px - 9,
+  py,
+  30,
+  6
+);
 
 // tangan kiri
 ctx.fillStyle = "#f5c28b";
@@ -1159,9 +1253,25 @@ ctx.fillRect(px - 10, py, 8, 18);
 ctx.fillRect(px + 2, py, 8, 18);
 
 
-// kepala
+// kepala depan
 ctx.fillStyle = "#f5c28b";
-ctx.fillRect(px - 10, py - 45, 20, 15);
+
+ctx.fillRect(
+  px - 10,
+  py - 45,
+  20,
+  15
+);
+
+// sisi kepala
+ctx.fillStyle = "#d9a066";
+
+ctx.fillRect(
+  px + 10,
+  py - 40,
+  4,
+  15
+);
 
 // HP
 ctx.fillStyle = "red";
