@@ -991,27 +991,24 @@ ctx.fillRect(rx, ry, r.size, r.size);
 // sisi
 ctx.fillStyle = "#1f5f99";
 ctx.fillRect(rx, ry + r.size, r.size, 4);
-
-// atas
-ctx.fillStyle = "#1e4d2b";
-ctx.fillRect(gx, gy, b.size, b.size);
-
-// sisi
-ctx.fillStyle = "#163821";
-ctx.fillRect(gx, gy + b.size, b.size, 5);
   }
 
-  // 🌿 SEMAK
-  for(let b of bushes){
-    ctx.fillStyle = "#1e4d2b";
-    ctx.fillRect(
-  b.x - camera.x,
-  b.y - camera.y,
-  b.size,
-  b.size
-);
-  }
+  
+// 🌿 SEMAK
+for(let b of bushes){
 
+  let gx = b.x - camera.x;
+  let gy = b.y - camera.y;
+
+  // atas
+  ctx.fillStyle = "#1e4d2b";
+  ctx.fillRect(gx, gy, b.size, b.size);
+
+  // sisi
+  ctx.fillStyle = "#163821";
+  ctx.fillRect(gx, gy + b.size, b.size, 5);
+}
+  
   // 🪨 BATU
 for(let o of obstacles){
 
