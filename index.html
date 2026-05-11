@@ -969,33 +969,84 @@ function draw(){
   // 🌊 SUNGAI
   for(let r of rivers){
     ctx.fillStyle = "#2c6fa3";
-    ctx.beginPath();
-    ctx.arc(r.x - camera.x, r.y - camera.y, r.size, 0, Math.PI*2);
-    ctx.fill();
+    ctx.fillRect(
+  r.x - camera.x,
+  r.y - camera.y,
+  r.size,
+  r.size
+);
   }
 
   // 🌿 SEMAK
   for(let b of bushes){
     ctx.fillStyle = "#1e4d2b";
-    ctx.beginPath();
-    ctx.arc(b.x - camera.x, b.y - camera.y, b.size, 0, Math.PI*2);
-    ctx.fill();
+    ctx.fillRect(
+  b.x - camera.x,
+  b.y - camera.y,
+  b.size,
+  b.size
+);
   }
 
   // 🪨 BATU
-  for(let o of obstacles){
-    ctx.fillStyle = "#777";
-    ctx.beginPath();
-    ctx.arc(o.x - camera.x, o.y - camera.y, o.size, 0, Math.PI*2);
-    ctx.fill();
-  }
+for(let o of obstacles){
 
-  // 🧱 BATAS MAP
+  ctx.fillStyle = "#777";
+
+  
+  ctx.fillRect(
+  o.x - camera.x,
+  o.y - camera.y,
+  o.size,
+  o.size
+);
+}
+
+  // 🧱 BATAS MAP BLOCK
+
+for(let y = 0; y < mapHeight; y += 40){
+
+  ctx.fillStyle = "#444";
+
+  // kiri
+  ctx.fillRect(
+    -camera.x,
+    y - camera.y,
+    40,
+    40
+  );
+
+  // kanan
+  ctx.fillRect(
+    mapWidth - camera.x,
+    y - camera.y,
+    40,
+    40
+  );
+
+}
+
+for(let x = 0; x < mapWidth; x += 40){
+
   ctx.fillStyle = "#555";
-  ctx.fillRect(-camera.x, -camera.y, 20, mapHeight);
-  ctx.fillRect(mapWidth - camera.x, -camera.y, 20, mapHeight);
-  ctx.fillRect(-camera.x, -camera.y, mapWidth, 20);
-  ctx.fillRect(-camera.x, mapHeight - camera.y, mapWidth, 20);
+
+  // atas
+  ctx.fillRect(
+    x - camera.x,
+    -camera.y,
+    40,
+    40
+  );
+
+  // bawah
+  ctx.fillRect(
+    x - camera.x,
+    mapHeight - camera.y,
+    40,
+    40
+  );
+
+}
 
   // 🌿 cek apakah player di semak
 let inBush = false;
@@ -1014,79 +1065,86 @@ for(let b of bushes){
 if(inBush){
   ctx.globalAlpha = 0.3;
 }
+  
+// 🔴 PLAYER
 
-  // 🔴 PLAYER
-  if(heroImg.complete){
-    ctx.drawImage(
-      heroImg,
-      player.x - camera.x - 25,
-      player.y - camera.y - 25,
-      50,
-      50
-    );
+ let px = player.x - camera.x;
+ let py = player.y - camera.y;
 
-// HP BAR PLAYER SENDIRI
-ctx.fillStyle = "red";
+ // nama hero
+ ctx.fillStyle = "white";
+ ctx.font = "14px Arial";
+ ctx.fillText(player.hero, px - 20, py - 45);
 
-ctx.fillRect(
-  player.x - camera.x - 20,
-  player.y - camera.y - 35,
-  40,
-  6
-);
+ // kepala
+ ctx.fillStyle = "#f5c28b";
+ ctx.fillRect(px - 10, py - 30, 20, 20);
 
-ctx.fillStyle = "lime";
+ // badan
+ ctx.fillStyle =
+player.team === "blue"
+? "#3498db"
+: "#e74c3c";
 
-ctx.fillRect(
-  player.x - camera.x - 20,
-  player.y - camera.y - 35,
-  (player.hp / 100) * 40,
-  6
-);
-    
-  } else {
-    // fallback kalau gambar belum load
-    ctx.fillStyle = "red";
-    ctx.beginPath();
-    ctx.arc(player.x - camera.x, player.y - camera.y, 20, 0, Math.PI*2);
-    ctx.fill();
-  }
+ // tangan kiri
+ ctx.fillStyle = "#f5c28b";
+ ctx.fillRect(px - 20, py - 10, 8, 25);
 
-  // 🔵 PLAYER LAIN
+ // tangan kanan
+ ctx.fillRect(px + 12, py - 10, 8, 25);
+
+ // kaki kiri
+ ctx.fillStyle = "#222";
+ ctx.fillRect(px - 10, py + 20, 8, 20);
+
+ // kaki kanan
+ ctx.fillRect(px + 2, py + 20, 8, 20);
+
+ // HP BAR
+ ctx.fillStyle = "red";
+ ctx.fillRect(px - 20, py - 40, 40, 6);
+
+ ctx.fillStyle = "lime";
+ ctx.fillRect(px - 20, py - 40, (player.hp / 100) * 40, 6);
+  
+// 🔵 PLAYER LAIN
   for(let id in otherPlayers){
-    let p = otherPlayers[id];
-    if(id !== playerId){
-      let img = heroImages[id];
-      if(img && img.complete){
-        ctx.drawImage(
-          img,
-          p.x - camera.x - 25,
-          p.y - camera.y - 25,
-          50,
-          50
-        );
 
-// HP BAR PLAYER
-ctx.fillStyle = "red";
+  let p = otherPlayers[id];
 
-ctx.fillRect(
-  p.x - camera.x - 20,
-  p.y - camera.y - 35,
-  40,
-  6
-);
+  let px = p.x - camera.x;
+  let py = p.y - camera.y;
 
-ctx.fillStyle = "lime";
+  // nama hero
+  ctx.fillStyle = "white";
+  ctx.font = "14px Arial";
+  ctx.fillText(p.hero, px - 20, py - 45);
 
-ctx.fillRect(
-  p.x - camera.x - 20,
-  p.y - camera.y - 35,
-  (p.hp / 100) * 40,
-  6
-);
-        
-      }
-    }
+  // kepala
+  ctx.fillStyle = "#f5c28b";
+  ctx.fillRect(px - 10, py - 30, 20, 20);
+
+  // badan
+  ctx.fillStyle = p.team === "blue" ? "#3498db" : "#e74c3c";
+  ctx.fillRect(px - 12, py - 10, 24, 30);
+
+  // tangan
+  ctx.fillStyle = "#f5c28b";
+  ctx.fillRect(px - 20, py - 10, 8, 25);
+  ctx.fillRect(px + 12, py - 10, 8, 25);
+
+  // kaki
+  ctx.fillStyle = "#222";
+  ctx.fillRect(px - 10, py + 20, 8, 20);
+  ctx.fillRect(px + 2, py + 20, 8, 20);
+
+  // HP BAR
+  ctx.fillStyle = "red";
+  ctx.fillRect(px - 20, py - 40, 40, 6);
+
+  ctx.fillStyle = "lime";
+  ctx.fillRect(px - 20, py - 40, (p.hp / 100) * 40, 6);
+
   }
 
   // 🏰 BASE
